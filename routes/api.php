@@ -10,6 +10,7 @@ use App\Http\Controllers\api\AssemblyTwoController;
 use App\Http\Controllers\api\QualityControlController;
 use App\Http\Controllers\api\FinishingOneController;
 use App\Http\Controllers\api\FinishingTwoController;
+use App\Http\Controllers\api\ReviewController;
 
 use App\Http\Controllers\api\OrderController;
 
@@ -65,4 +66,8 @@ Route::group(['prefix' => 'enrod'], function() {
 
 Route::group(['prefix' => 'enrod'], function() {
     Route::apiResource('finishing_two', FinishingTwoController::class);
+});
+
+Route::group(['prefix' => 'enrod'], function() {
+    Route::apiResource('status', ReviewController::class);
 });

@@ -27,7 +27,8 @@ class Orders extends Model
         'date_checked',
         'finishing_one', 
         'date_finished_one',
-        'finishing_two', 
+        'finishing_two',
+        'status', 
         'date_started',
         'date_finished'
     ];

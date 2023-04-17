@@ -35,6 +35,7 @@ class OrderRequest extends FormRequest
             'quality_control' => ['nullable', 'string'],
             'finishing_one' => ['nullable', 'string'],
             'finishing_two' => ['nullable', 'string'],
+            'status' => ['nullable', 'string'],
             'date_started' => ['required', 'date'],
             'date_finished' => ['nullable', 'date']
         ];

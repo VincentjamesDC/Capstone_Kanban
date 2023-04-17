@@ -34,6 +34,7 @@ class OrderResource extends JsonResource
             'finishing_one' => $this->finishing_one,
             'date_finished_one' => $this->date_finished_one,
             'finishing_two' => $this->finishing_two,
+            'status' => $this->status,
             'date_started' => $this->date_started,
             'date_finished' => $this->date_finished
         ];

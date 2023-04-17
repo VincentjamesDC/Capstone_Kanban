@@ -31,6 +31,7 @@ return new class extends Migration
             $table->string('finishing_one')->nullable();
             $table->date('date_finished_one')->nullable();
             $table->string('finishing_two')->nullable();
+            $table->string('status');
             $table->date('date_started');
             $table->date('date_finished')->nullable();
             $table->timestamps();

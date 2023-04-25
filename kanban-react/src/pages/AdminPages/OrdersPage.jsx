@@ -23,7 +23,7 @@ const OrdersPage = () => {
     const navigate = useNavigate();
 
 
-    const { product_orders, getOrders, showModal, setModal, formValues, onChange, errors, postOrder, loading, deleteOrder, updateOrder } = useContext(OrdersContext);
+    const { product_orders, getOrders, showModal, setModal, formValues, onChange, errors, postOrder, loading, deleteOrder, updateOrder, result, closeResultFast, up_result, closeUpdateResultFast, del_result, closeDelResultFast } = useContext(OrdersContext);
 
     useEffect(() =>{
         getOrders();
@@ -83,12 +83,26 @@ const OrdersPage = () => {
         status: "Reviewed",
     }
 
+    const [review_result, setReviewResult ] = useState(null);
+
+    function closeReviewResult(){
+        setTimeout(() => {
+            setReviewResult(null);
+        }, 5000)
+      }
+    
+    function closeReviewResultFast(){
+        setReviewResult(null);
+    }
+
     const handleDeliver = async (e, order_id) => {
         let status = "Reviewed";
         e.preventDefault();
         const response = await axios.put("api/enrod/status/" + order_id, {status});
         if(response.data.status === 200){
-            getOrders();
+            await getOrders();
+            setReviewResult(response.status);
+            closeReviewResult();
             navigate("/admin/product-orders");
         }
       };
@@ -247,10 +261,25 @@ const OrdersPage = () => {
                         product_orders?.filter(product_order => product_order.cutting === "In-Progress" || product_order.cutting === "Ok" && product_order.date_finished === null).map(order => {
                             return(
                                      <div  key={order.id} className="m-auto h-full w-full max-w-md bg-white shadow-md p-2 border-t-4 border-amber-600 rounded">
-                                            <header className="p-2 border-b flex"> 
+                                            <header className="p-2 border-b flex justify-between"> 
                                                 <div className="flex flex-col">
                                                     <h4 className="text-xs font-semibold">PO: {order.product_order}</h4>
-                                                    <h1 className="text-lg font-mono text-amber-600">Item Code: {order.item_code}</h1>
+                                                    <h1 className="text-lg font-mono text-blue-600">Item Code: {order.item_code}</h1>
+                                                </div>
+                                                <div className='flex gap-2'>
+                                                    <button onClick={() => {handleEdit(order.id, order.product_order, order.item_code, order.description, order.quantity, order.week_issued, order.date_started)}} className='text-sm font-medium '>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-orange-500 hover:scale-105" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                        </svg>
+                                                    </button>
+                                                    <button onClick={() => {handleDelete(order.id, order.product_order)}} className='text-sm font-medium '>
+                                                        {/* <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                                            <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                                                        </svg> */}
+                                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-red-700 hover:scale-105" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                        </svg>
+                                                    </button>
                                                 </div>
                                             </header>
                                             <div className="flex flex-wrap justify-between p-2 w-full gap-2">
@@ -351,7 +380,78 @@ const OrdersPage = () => {
             </div>
         </div>
     </div> 
-       
+    
+    {
+        result && 
+        <FadeInOut show={result} duration={150}>
+             <div className='w-1/6 absolute bottom-2 right-6'>
+                <div id="alert-border-3" className="flex p-4 mb-4 border-t-4  text-white bg-gray-800 border-green-800 rounded-md" role="alert">
+                    <svg className="flex-shrink-0 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"></path></svg>
+                    <div className="ml-3 text-sm font-medium">
+                        <p>Successfully Created!</p>
+                    </div>
+                    <button onClick={closeResultFast} type="button" className="ml-auto -mx-1.5 -my-1.5   rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 inline-flex h-8 w-8 bg-gray-800 text-green-400 hover:bg-gray-700"  data-dismiss-target="#alert-border-3" aria-label="Close">
+                    <span className="sr-only">Dismiss</span>
+                    <svg aria-hidden="true" className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </FadeInOut>
+    }
+     {
+        review_result && 
+        <FadeInOut show={review_result} duration={150}>
+             <div className='w-1/6 absolute bottom-2 right-6'>
+                <div id="alert-border-3" className="flex p-4 mb-4 border-t-4  text-white bg-gray-800 border-green-800 rounded-md" role="alert">
+                    <svg className="flex-shrink-0 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"></path></svg>
+                    <div className="ml-3 text-sm font-medium">
+                        <p>Order Reviewed!</p>
+                    </div>
+                    <button onClick={closeReviewResultFast} type="button" className="ml-auto -mx-1.5 -my-1.5   rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 inline-flex h-8 w-8 bg-gray-800 text-green-400 hover:bg-gray-700"  data-dismiss-target="#alert-border-3" aria-label="Close">
+                    <span className="sr-only">Dismiss</span>
+                    <svg aria-hidden="true" className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </FadeInOut>
+    }
+    {
+        up_result && 
+        <FadeInOut show={up_result} duration={150}>
+            <div className='w-1/6 absolute bottom-2 right-6'>
+                <div id="alert-border-3" className="flex p-4 mb-4 border-t-4  text-white bg-gray-800 border-green-800 rounded-md" role="alert">
+                    <svg className="flex-shrink-0 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"></path></svg>
+                    <div className="ml-3 text-sm font-medium">
+                        <p>Updated Successfully!</p>
+                    </div>
+                    <button onClick={closeUpdateResultFast} type="button" className="ml-auto -mx-1.5 -my-1.5   rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 inline-flex h-8 w-8 bg-gray-800 text-green-400 hover:bg-gray-700"  data-dismiss-target="#alert-border-3" aria-label="Close">
+                    <span className="sr-only">Dismiss</span>
+                    <svg aria-hidden="true" className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </FadeInOut>
+    }
+
+    {
+        del_result && 
+        <FadeInOut show={del_result} duration={150}>
+            <div className='w-1/6 absolute bottom-2 right-6'>
+                <div id="alert-border-3" className="flex p-4 mb-4 border-t-4  text-white bg-gray-800 border-green-800 rounded-md" role="alert">
+                    <svg className="flex-shrink-0 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"></path></svg>
+                    <div className="ml-3 text-sm font-medium">
+                        <p>Item Deleted!</p>
+                    </div>
+                    <button onClick={closeDelResultFast} type="button" className="ml-auto -mx-1.5 -my-1.5   rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 inline-flex h-8 w-8 bg-gray-800 text-green-400 hover:bg-gray-700"  data-dismiss-target="#alert-border-3" aria-label="Close">
+                    <span className="sr-only">Dismiss</span>
+                    <svg aria-hidden="true" className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </FadeInOut>
+    }
+        
+    
         {
             showModal && 
             <FadeInOut show={showModal} duration={200}>

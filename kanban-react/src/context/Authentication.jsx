@@ -22,15 +22,23 @@ export const AuthProvider = ({ children }) => {
     setFormValues({ ...formValues, [name]: value });
   };
 
-
-
     const [user, setUser] = useState(null);
     const [users, setUsers] = useState([]);
     const [errors, setErrors] = useState([]);
     const [showModal, setModal] = useState(false);
 
     const [ loading, setLoading ] = useState(false);
+    const [result, setResult] = useState(null);
 
+    function closeResult(){
+      setTimeout(() => {
+        setResult(null);
+      }, 5000)
+    }
+
+    function closeResultFast(){
+        setResult(null);
+    }
 
     const navigate = useNavigate();
 
@@ -48,17 +56,21 @@ export const AuthProvider = ({ children }) => {
 
     const createUser = async (e) => {
       e.preventDefault();
+      setLoading(true);
       setErrors([]);
       try {
-        await axios.post("api/usergroup", formValues);
+        const response = await axios.post("api/usergroup", formValues);
         await getUsers();
         setFormValues(initialForm);
+        setResult(response.status);
         setModal(false);
+        closeResult();
       } catch (e) {
         if (e.response.status === 422) {
           setErrors(e.response.data.errors);
         }
       }
+      setLoading(false);
     }
 
     const loginAdmin = async ({ ...data }) => {
@@ -115,7 +127,9 @@ export const AuthProvider = ({ children }) => {
         showModal,
         createUser,
         setErrors,
-        loading
+        loading,
+        result,
+        closeResultFast
       }}>
       {children}
     </Auth.Provider>

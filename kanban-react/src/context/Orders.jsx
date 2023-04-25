@@ -43,12 +43,45 @@ export const OrdersProvider = ({children}) => {
     }
 
     const [formValues, setFormValues] = useState(initialForm);
+    const [result, setResult] = useState(null);
+    const [up_result, setUpdateResult] = useState(null);
+
+    const [del_result, setDelResult] = useState(null);
 
     const [product_orders, setOrders] = useState([]);
     const [errors, setErrors] = useState({});
     const [showModal, setModal] = useState(false);
     const [loading, setLoading] = useState(false);
 
+    function closeResult(){
+      setTimeout(() => {
+        setResult(null);
+      }, 5000)
+    }
+
+    function closeResultFast(){
+        setResult(null);
+    }
+    
+    function closeDelResult(){
+      setTimeout(() => {
+        setDelResult(null);
+      }, 5000)
+    }
+
+    function closeDelResultFast(){
+        setDelResult(null);
+    }
+    
+    function closeUpdateResult(){
+      setTimeout(() => {
+        setUpdateResult(null);
+      }, 5000)
+    }
+
+    function closeUpdateResultFast(){
+        setUpdateResult(null);
+    }
 
     const onChange = (e) => {
         const { name, value } = e.target;
@@ -74,6 +107,8 @@ export const OrdersProvider = ({children}) => {
         await getOrders();
         setModal(false);
         setFormValues(initialForm);
+        setResult(response.status);
+        closeResult();
       } catch (e) {
         if (e.response.status === 422) {
           setErrors(e.response.data.errors);
@@ -84,13 +119,17 @@ export const OrdersProvider = ({children}) => {
 
     const updateOrder = async (update_id, product_order, item_code, description, quantity2, week_issued, date_started) => {
       let quantity = quantity2.toString();
-      await axios.put("api/enrod/order/" + update_id, {week_issued, product_order, item_code, description, quantity, date_started});
-      getOrders();
+      const response = await axios.put("api/enrod/order/" + update_id, {week_issued, product_order, item_code, description, quantity, date_started});
+      setUpdateResult(response.status);
+      await getOrders();
+      closeUpdateResult();
     };
 
     const deleteOrder = async (id) => {
-      await axios.delete("api/enrod/order/" + id);
-      getOrders();
+      const response = await axios.delete("api/enrod/order/" + id);
+      await getOrders();
+      setDelResult(response.status);
+      closeDelResult();
     };
 
 
@@ -105,7 +144,14 @@ export const OrdersProvider = ({children}) => {
         postOrder,
         loading,
         deleteOrder,
-        updateOrder
+        updateOrder,
+        result,
+        setResult,
+        closeResultFast,
+        up_result,
+        closeUpdateResultFast,
+        del_result,
+        closeDelResultFast
     }}>{children}</OrdersContext.Provider>
 };
 

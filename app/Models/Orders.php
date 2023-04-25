@@ -10,14 +10,14 @@ class Orders extends Model
     use HasFactory;
 
     protected $fillable = [
-        'week_issued', 
-        'product_order', 
-        'item_code', 
-        'description', 
-        'quantity', 
+        'week_issued',
+        'product_order',
+        'item_code',
+        'description',
+        'quantity',
         'cutting',
         'date_cutted',
-        'assembly_prep', 
+        'assembly_prep',
         'date_preped',
         'assembly_one',
         'date_assembled_one',
@@ -25,10 +25,10 @@ class Orders extends Model
         'date_assembled_two',
         'quality_control',
         'date_checked',
-        'finishing_one', 
+        'finishing_one',
         'date_finished_one',
         'finishing_two',
-        'status', 
+        'status',
         'date_started',
         'date_finished'
     ];

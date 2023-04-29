@@ -30,6 +30,19 @@ export const AuthProvider = ({ children }) => {
     const [ loading, setLoading ] = useState(false);
     const [result, setResult] = useState(null);
 
+    const [del_result, setDelResult] = useState(null);
+
+      
+    function closeDelResult(){
+      setTimeout(() => {
+        setDelResult(null);
+      }, 5000)
+    }
+
+    function closeDelResultFast(){
+        setDelResult(null);
+    }
+
     function closeResult(){
       setTimeout(() => {
         setResult(null);
@@ -112,6 +125,13 @@ export const AuthProvider = ({ children }) => {
         });
     };
 
+    const deleteUser = async (id) => {
+      const response = await axios.delete("api/usergroup/" + id);
+      await getUsers();
+      setDelResult(response.status);
+      closeDelResult();
+    };
+
     return <Auth.Provider value = {{ 
         loginAdmin,
         errors,
@@ -129,7 +149,10 @@ export const AuthProvider = ({ children }) => {
         setErrors,
         loading,
         result,
-        closeResultFast
+        closeResultFast,
+        deleteUser,
+        del_result,
+        closeDelResultFast
       }}>
       {children}
     </Auth.Provider>

@@ -48,9 +48,4 @@ class UserController extends Controller
 
         return response()->json("New Admin Created");
     }
-    public function destroy($id){
-        $user = User::findOrFail($id);
-        $user->delete();
-        return response()->json("User Deleted");
-    }
 }

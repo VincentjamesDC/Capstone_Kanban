@@ -92,7 +92,7 @@ const UserBoard = () => {
                     </span>
                     <span className="ml-2 text-sm tracking-wide truncate">To do list</span>
                     {
-                      product_orders?.filter(product_order => product_order.assembly_prep === null  && product_order.cutting === "Ok").length > 0 && 
+                      product_orders?.filter(product_order => product_order.assembly_prep === null  && product_order.cutting === "Done").length > 0 && 
                       <span className="hidden md:block px-2 py-0.5 ml-auto text-xs font-medium tracking-wide text-blue-500 bg-indigo-50 rounded-full">New</span>
                     }
                   </Link>
@@ -106,7 +106,7 @@ const UserBoard = () => {
                     </span>
                     <span className="ml-2 text-sm tracking-wide truncate">To do list</span>
                     {
-                    product_orders?.filter(product_order => product_order.assembly_one === null  && product_order.assembly_prep === "Ok").length > 0 &&
+                    product_orders?.filter(product_order => product_order.assembly_one === null  && product_order.assembly_prep === "Done").length > 0 &&
                     <span className="hidden md:block px-2 py-0.5 ml-auto text-xs font-medium tracking-wide text-blue-500 bg-indigo-50 rounded-full">New</span>
                     }                  
                   </Link>
@@ -120,7 +120,7 @@ const UserBoard = () => {
                     </span>
                     <span className="ml-2 text-sm tracking-wide truncate">To do list</span>
                     {
-                    product_orders?.filter(product_order => product_order.assembly_two === null  && product_order.assembly_one === "Ok").length > 0 &&
+                    product_orders?.filter(product_order => product_order.assembly_two === null  && product_order.assembly_one === "Done").length > 0 &&
                     <span className="hidden md:block px-2 py-0.5 ml-auto text-xs font-medium tracking-wide text-blue-500 bg-indigo-50 rounded-full">New</span>
                     }                       
                   </Link>
@@ -134,7 +134,7 @@ const UserBoard = () => {
                     </span>
                     <span className="ml-2 text-sm tracking-wide truncate">To do list</span>
                     {
-                    product_orders?.filter(product_order => product_order.quality_control === null  && product_order.assembly_two === "Ok").length > 0 &&
+                    product_orders?.filter(product_order => product_order.quality_control === null  && product_order.assembly_two === "Done").length > 0 &&
                     <span className="hidden md:block px-2 py-0.5 ml-auto text-xs font-medium tracking-wide text-blue-500 bg-indigo-50 rounded-full">New</span>
                     }                       
                   </Link>
@@ -149,7 +149,7 @@ const UserBoard = () => {
                     </span>
                     <span className="ml-2 text-sm tracking-wide truncate">To do list</span>
                     {
-                    product_orders?.filter(product_order => product_order.finishing_one === null  && product_order.quality_control === "Ok").length > 0 &&
+                    product_orders?.filter(product_order => product_order.finishing_one === null  && product_order.quality_control === "Done").length > 0 &&
                     <span className="hidden md:block px-2 py-0.5 ml-auto text-xs font-medium tracking-wide text-blue-500 bg-indigo-50 rounded-full">New</span>
                     }       
                   </Link>
@@ -163,7 +163,7 @@ const UserBoard = () => {
                     </span>
                     <span className="ml-2 text-sm tracking-wide truncate">To do list</span>
                     {
-                    product_orders?.filter(product_order => product_order.finishing_two === null  && product_order.finishing_one === "Ok").length > 0 &&
+                    product_orders?.filter(product_order => product_order.finishing_two === null  && product_order.finishing_one === "Done").length > 0 &&
                     <span className="hidden md:block px-2 py-0.5 ml-auto text-xs font-medium tracking-wide text-blue-500 bg-indigo-50 rounded-full">New</span>
                     }                      
                     </Link>

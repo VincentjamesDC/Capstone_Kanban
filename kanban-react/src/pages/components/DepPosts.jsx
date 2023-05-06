@@ -1,4 +1,4 @@
-import React, {useRef, useState, useEffect} from 'react'
+import React, {useRef, useState, useEffect, useContext} from 'react'
 
 import { useDownloadExcel } from 'react-export-table-to-excel';
 import {
@@ -35,7 +35,7 @@ const DepPosts = ({product_orders}) => {
             return array.filter((order) => order.date_finished !== null);
           }
           else if(progressFilter === "In-Progress"){
-            return array.filter((order) => order.cutting === "In-Progress" || order.cutting === "Ok" && order.date_finished === null);
+            return array.filter((order) => order.cutting === "In-Progress" || order.cutting === "Done" && order.date_finished === null);
           }
           else{
             return array.filter((order) => order.cutting === null);
@@ -58,25 +58,25 @@ const DepPosts = ({product_orders}) => {
       const filterDate = (array) => {
         if(dateFilter != ''){
             if(departmentFilter === "cutting"){
-                return array.filter((order) => order.date_cutted === dateFilter);
+                return array.filter((order) => order.cutting_finish?.split(' ')[0] === dateFilter);
             }
             else if(departmentFilter === "assembly_prep"){
-                return array.filter((order) => order.date_preped === dateFilter);
+                return array.filter((order) => order.assembly_prep_finish?.split(' ')[0] === dateFilter);
             }
             else if(departmentFilter === "assembly_one"){
-                return array.filter((order) => order.date_assembled_one === dateFilter);
+                return array.filter((order) => order.assembly_one_finish?.split(' ')[0] === dateFilter);
             }
             else if(departmentFilter === "assembly_two"){
-                return array.filter((order) => order.date_assembled_two === dateFilter);
+                return array.filter((order) => order.assembly_two_finish?.split(' ')[0] === dateFilter);
             }
             else if(departmentFilter === "quality_control"){
-                return array.filter((order) => order.date_checked === dateFilter);
+                return array.filter((order) => order.quality_control_finish?.split(' ')[0] === dateFilter);
             }
             else if(departmentFilter === "finishing_one"){
-                return array.filter((order) => order.date_finished_one === dateFilter);
+                return array.filter((order) => order.finishing_one_finish?.split(' ')[0] === dateFilter);
             }
             else if(departmentFilter === "finishing_two"){
-                return array.filter((order) => order.date_finished === dateFilter);
+                return array.filter((order) => order.finishing_two_finish?.split(' ')[0] === dateFilter);
             }
             else{
                 return array.filter((order) => order.date_finished === dateFilter);
@@ -90,25 +90,25 @@ const DepPosts = ({product_orders}) => {
       const filterDepartment = (array) => {
         if(departmentFilter != ''){
             if(departmentFilter === "cutting"){
-                return array.filter((order) => order.cutting === "Ok");
+                return array.filter((order) => order.cutting === "Done");
             }
             else if(departmentFilter === "assembly_prep"){
-                return array.filter((order) => order.assembly_prep === "Ok");
+                return array.filter((order) => order.assembly_prep === "Done");
             }
             else if(departmentFilter === "assembly_one"){
-                return array.filter((order) => order.assembly_one === "Ok");
+                return array.filter((order) => order.assembly_one === "Done");
             }
             else if(departmentFilter === "assembly_two"){
-                return array.filter((order) => order.assembly_two === "Ok");
+                return array.filter((order) => order.assembly_two === "Done");
             }
             else if(departmentFilter === "quality_control"){
-                return array.filter((order) => order.quality_control === "Ok");
+                return array.filter((order) => order.quality_control === "Done");
             }
             else if(departmentFilter === "finishing_one"){
-                return array.filter((order) => order.finishing_one === "Ok");
+                return array.filter((order) => order.finishing_one === "Done");
             }
             else if(departmentFilter === "finishing_two"){
-                return array.filter((order) => order.finishing_two === "Ok");
+                return array.filter((order) => order.finishing_two === "Done");
             }
         }
         else{
@@ -236,10 +236,6 @@ const DepPosts = ({product_orders}) => {
                         <th className="text-left py-3 px-4 uppercase font-semibold text-sm">Quantity</th>
                         <th className="text-left py-3 px-4 uppercase font-semibold text-sm">Date Started</th>
                         <th className="text-left py-3 px-4 uppercase font-semibold text-sm">Date Finished</th>
-                        <th className="text-left py-3 px-4 uppercase font-semibold text-sm">Status</th>
-                        {
-                            dateFilter && <th className="text-left py-3 px-4 uppercase font-semibold text-sm hidden">Date Finished</th>
-                        }
                     </tr>
                 </thead>
                 <tbody className="text-gray-700 divide-y divide-gray-200">
@@ -248,7 +244,6 @@ const DepPosts = ({product_orders}) => {
                         filteredOrders?.map(order => {
                             return(
                                 <tr key={order.id}>
-                                   
                                     <td className="px-4 py-4 text-sm font-medium whitespace-nowrap">
                                         {order.week_issued}
                                     </td>
@@ -265,49 +260,52 @@ const DepPosts = ({product_orders}) => {
                                         {order.quantity}
                                     </td>
                                     <td className="px-4 py-4 text-sm font-medium whitespace-nowrap">
-                                        {order.date_started}
-                                    </td>
-                                    <td className="px-4 py-4 text-sm font-medium whitespace-nowrap">
-                                        {
-                                            departmentFilter === "cutting" &&  order.date_cutted
-                                        }
-                                        {
-                                            departmentFilter === "assembly_prep" &&  order.date_preped
-                                        }
-                                        {
-                                            departmentFilter === "assembly_one" &&  order.date_assembled_one
-                                        }
-                                        {
-                                            departmentFilter === "assembly_two" &&  order.date_assembled_two
-                                        }
-                                        {
-                                            departmentFilter === "quality_control" &&  order.date_checked
-                                        }
-                                        {
-                                            departmentFilter === "finishing_one" &&  order.date_finished_one
-                                        }
-                                         {
-                                            departmentFilter === "finishing_two" &&  order.date_finished
-                                        }
-                                    </td>
-                                    <td className="px-4 py-4 text-sm font-medium whitespace-nowrap">
-                                        {
-                                            departmentFilter == "" ?
-                                            order.date_finished === null ?
-                                             <div className="inline px-3 py-1 text-sm font-normal rounded-full text-orange-500 gap-x-2 bg-orange-100/60">
-                                                    In-Progress
-                                                </div>    
-
-                                                :
-                                                <div className="inline px-3 py-1 text-sm font-normal rounded-full text-green-500 gap-x-2 bg-green-100/60">
-                                                    Completed
-                                                </div>
-                                            :
-                                            <div className="inline px-3 py-1 text-sm font-normal rounded-full text-green-500 gap-x-2 bg-green-100/60">
-                                                Ok
-                                            </div>    
-                                        }
-                                    </td>
+                                                  {
+                                                      departmentFilter === "cutting" &&  order.cutting_start
+                                                  }
+                                                  {
+                                                      departmentFilter === "assembly_prep" &&  order.assembly_prep_start
+                                                  }
+                                                  {
+                                                      departmentFilter === "assembly_one" &&  order.assembly_one_start
+                                                  }
+                                                  {
+                                                      departmentFilter === "assembly_two" &&  order.assembly_two_start
+                                                  }
+                                                  {
+                                                      departmentFilter === "quality_control" &&  order.quality_control_start
+                                                  }
+                                                  {
+                                                      departmentFilter === "finishing_one" &&  order.finishing_one_start
+                                                  }
+                                                  {
+                                                      departmentFilter === "finishing_two" &&  order.finishing_two_start
+                                                  }
+                                              </td>
+                                              <td className="px-4 py-4 text-sm font-medium whitespace-nowrap">
+                                                  {
+                                                      departmentFilter === "cutting" &&  order.cutting_finish
+                                                  }
+                                                  {
+                                                      departmentFilter === "assembly_prep" &&  order.assembly_prep_finish
+                                                  }
+                                                  {
+                                                      departmentFilter === "assembly_one" &&  order.assembly_one_finish
+                                                  }
+                                                  {
+                                                      departmentFilter === "assembly_two" &&  order.assembly_two_finish
+                                                  }
+                                                  {
+                                                      departmentFilter === "quality_control" &&  order.quality_control_finish
+                                                  }
+                                                  {
+                                                      departmentFilter === "finishing_one" &&  order.finishing_one_finish
+                                                  }
+                                                  {
+                                                      departmentFilter === "finishing_two" &&  order.finishing_two_finish
+                                                  }
+                                              </td>
+                                    
                                 </tr>
                             )
                         }):
@@ -330,23 +328,51 @@ const DepPosts = ({product_orders}) => {
                                         {order.quantity}
                                     </td>
                                     <td className="px-4 py-4 text-sm font-medium whitespace-nowrap">
-                                        {
-                                            departmentFilter == "" ?
-                                            order.date_finished === null ?
-                                             <div className="inline px-3 py-1 text-sm font-normal rounded-full text-orange-500 gap-x-2 bg-orange-100/60">
-                                                    In-Progress
-                                                </div>    
-
-                                                :
-                                                <div className="inline px-3 py-1 text-sm font-normal rounded-full text-green-500 gap-x-2 bg-green-100/60">
-                                                    Completed
-                                                </div>
-                                            :
-                                            <div className="inline px-3 py-1 text-sm font-normal rounded-full text-green-500 gap-x-2 bg-green-100/60">
-                                                Ok
-                                            </div>    
-                                        }
-                                    </td>
+                                                  {
+                                                      departmentFilter === "cutting" &&  order.cutting_start
+                                                  }
+                                                  {
+                                                      departmentFilter === "assembly_prep" &&  order.assembly_prep_start
+                                                  }
+                                                  {
+                                                      departmentFilter === "assembly_one" &&  order.assembly_one_start
+                                                  }
+                                                  {
+                                                      departmentFilter === "assembly_two" &&  order.assembly_two_start
+                                                  }
+                                                  {
+                                                      departmentFilter === "quality_control" &&  order.quality_control_start
+                                                  }
+                                                  {
+                                                      departmentFilter === "finishing_one" &&  order.finishing_one_start
+                                                  }
+                                                  {
+                                                      departmentFilter === "finishing_two" &&  order.finishing_two_start
+                                                  }
+                                              </td>
+                                              <td className="px-4 py-4 text-sm font-medium whitespace-nowrap">
+                                                  {
+                                                      departmentFilter === "cutting" &&  order.cutting_finish
+                                                  }
+                                                  {
+                                                      departmentFilter === "assembly_prep" &&  order.assembly_prep_finish
+                                                  }
+                                                  {
+                                                      departmentFilter === "assembly_one" &&  order.assembly_one_finish
+                                                  }
+                                                  {
+                                                      departmentFilter === "assembly_two" &&  order.assembly_two_finish
+                                                  }
+                                                  {
+                                                      departmentFilter === "quality_control" &&  order.quality_control_finish
+                                                  }
+                                                  {
+                                                      departmentFilter === "finishing_one" &&  order.finishing_one_finish
+                                                  }
+                                                  {
+                                                      departmentFilter === "finishing_two" &&  order.finishing_two_finish
+                                                  }
+                                              </td>
                                 </tr>
                             )
                         })
@@ -409,7 +435,7 @@ const DepPosts = ({product_orders}) => {
                                                 </div>
                                             :
                                             <div className="inline px-3 py-1 text-sm font-normal rounded-full text-green-500 gap-x-2 bg-green-100/60">
-                                                Ok
+                                                Done
                                             </div>    
                                         }
                                     </td>
@@ -449,7 +475,7 @@ const DepPosts = ({product_orders}) => {
                                                     </div>    
                                             :
                                             <div className="inline px-3 py-1 text-sm font-normal rounded-full text-green-500 gap-x-2 bg-green-100/60">
-                                                        Ok
+                                                        Done
                                             </div>    
                                         }
                                     </td>

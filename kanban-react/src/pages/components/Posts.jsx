@@ -1,5 +1,6 @@
 import React, {useRef, useState, useEffect} from 'react'
 import { ExportToExcel } from './ExcelExport';
+import { ExportToExcel2 } from './ExcelExport2';
 
 import {
     Menu,
@@ -27,15 +28,15 @@ const Posts = ({product_orders, postsPerPage, totalPosts, paginate, currentP, in
         if(progressFilter != ''){
           if(progressFilter === "Completed"){
             setCurrentPage2(1);
-            return array.filter((order) => order.date_finished !== null && order.finishing_two === "Ok" && order.status === "Reviewed");
+            return array.filter((order) => order.date_finished !== null);
           }
           else if(progressFilter === "In-Progress"){
             setCurrentPage2(1);
-            return array.filter((order) => order.cutting === null || order.cutting === "In-Progress" || order.cutting === "Ok" && order.date_finished === null);
+            return array.filter((order) => order.date_finished === null && order.cutting !== null);
           }
-          else if(progressFilter === "Delivered"){
+          else if(progressFilter === "Pending"){
             setCurrentPage2(1);
-            return array.filter((order) => order.date_finished !== null && order.finishing_two === "Reviewed");
+            return array.filter((order) => order.cutting === null && order.date_finished === null);
           }
         }
         else{
@@ -114,11 +115,45 @@ const Posts = ({product_orders, postsPerPage, totalPosts, paginate, currentP, in
     <div>            
         <div className="md:px-12 py-0 w-full">
         <section className="container mx-auto">
+              <div>
+                 {/* <Menu>
+                            <MenuHandler>
+                                <Button className="flex items-center justify-center w-1/2 px-5 py-2 text-sm text-white transition-colors font-normal duration-200 bg-blue-600 normal-case rounded-lg gap-x-2 sm:w-auto hover:bg-blue-500" variant="black">
+
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <g clipPath="url(#clip0_3098_154395)">
+                                        <path d="M13.3333 13.3332L9.99997 9.9999M9.99997 9.9999L6.66663 13.3332M9.99997 9.9999V17.4999M16.9916 15.3249C17.8044 14.8818 18.4465 14.1806 18.8165 13.3321C19.1866 12.4835 19.2635 11.5359 19.0351 10.6388C18.8068 9.7417 18.2862 8.94616 17.5555 8.37778C16.8248 7.80939 15.9257 7.50052 15 7.4999H13.95C13.6977 6.52427 13.2276 5.61852 12.5749 4.85073C11.9222 4.08295 11.104 3.47311 10.1817 3.06708C9.25943 2.66104 8.25709 2.46937 7.25006 2.50647C6.24304 2.54358 5.25752 2.80849 4.36761 3.28129C3.47771 3.7541 2.70656 4.42249 2.11215 5.23622C1.51774 6.04996 1.11554 6.98785 0.935783 7.9794C0.756025 8.97095 0.803388 9.99035 1.07431 10.961C1.34523 11.9316 1.83267 12.8281 2.49997 13.5832" stroke="currentColor" strokeWidth="1.67" strokeLinecap="round" strokeLinejoin="round"/>
+                                        </g>
+                                        <defs>
+                                        <clipPath id="clip0_3098_154395">
+                                        <rect width="20" height="20" fill="white"/>
+                                        </clipPath>
+                                        </defs>
+                                    </svg>
+                                    Export
+                                </Button>
+                            </MenuHandler>
+                            <MenuList className='space-y-2 rounded-md'>
+                                <ExportToExcel apiData={product_orders.filter(product_order => (product_order.cutting === null))} fileName={"Enrod-Orders"} name={"Pending Orders"}/>
+                                <ExportToExcel apiData={product_orders.filter(product_order => (product_order.cutting !== null && product_order.date_finished === null))} fileName={"Enrod-Orders"} name={"In-Progress Orders"}/>
+                                <ExportToExcel apiData={product_orders.filter(product_order => product_order.date_finished !== null && product_order.finishing_two === "Done")} fileName={"Enrod-Orders"} name={"Completed Orders"} />
+                                <ExportToExcel apiData={product_orders.filter(product_order => product_order.date_finished !== null && product_order.status === "Reviewed")} fileName={"Enrod-Orders"} name={"Reviewed Orders"} />
+                            </MenuList>
+                        </Menu> */}
+                        <button >
+                          <ExportToExcel2 apiData={isFiltered? filteredOrders : product_orders} fileName={"Summary-Report Enrod"} name={"Export"} />
+                        </button>
+                  
+              </div>
               <div className="mt-6 md:flex md:items-center md:justify-between">
                   <div className="inline-flex overflow-hidden border divide-x rounded-lg bg-gray-800 rtl:flex-row-reverse border-gray-700 divide-gray-700">
                       
                       <button onClick={() => {setProgressFilter("")}} className={progressFilter == "" ? "px-5 py-2 text-xs font-medium transition-colors duration-200 sm:text-sm bg-blue-600 text-gray-200" : "px-5 py-2 text-xs font-medium transition-colors duration-200 sm:text-sm bg-gray-800 text-gray-200"}>
                           All
+                      </button>
+
+                      <button onClick={() => {setProgressFilter("Pending")}} className={progressFilter == "Pending" ? "px-5 py-2 text-xs font-medium transition-colors duration-200 sm:text-sm bg-blue-600 text-gray-200" : "px-5 py-2 text-xs font-medium transition-colors duration-200 sm:text-sm bg-gray-800 text-gray-200"}>
+                          Pending
                       </button>
 
                       <button onClick={() => {setProgressFilter("In-Progress")}} className={progressFilter == "In-Progress" ? "px-5 py-2 text-xs font-medium transition-colors duration-200 sm:text-sm bg-blue-600 text-gray-200" : "px-5 py-2 text-xs font-medium transition-colors duration-200 sm:text-sm bg-gray-800 text-gray-200"}>
@@ -187,7 +222,7 @@ const Posts = ({product_orders, postsPerPage, totalPosts, paginate, currentP, in
                                                 <tr key={order.id}>
                                                    <td className="px-4 py-4 text-sm whitespace-nowrap">
                                                         <div>
-                                                            <h4 className="text-gray-700 ">{order.week_issued}</h4>
+                                                            <h4 className="text-gray-700 font-semibold">{order.week_issued}</h4>
                                                         </div>
                                                     </td>
                                                     <td className="px-4 py-4 text-sm font-medium whitespace-nowrap">
@@ -216,7 +251,7 @@ const Posts = ({product_orders, postsPerPage, totalPosts, paginate, currentP, in
                                                           </div>
                                                         }
                                                         {
-                                                          order.cutting === "Ok" && 
+                                                          order.cutting === "Done" && 
                                                           <div className="inline px-3 py-1 text-sm font-normal rounded-full text-green-500 gap-x-2 bg-green-100/60">
                                                               {order.cutting}
                                                           </div>
@@ -224,7 +259,7 @@ const Posts = ({product_orders, postsPerPage, totalPosts, paginate, currentP, in
                                                     </td>
                                                     <td className="px-0 py-4 text-sm font-medium whitespace-nowrap">
                                                         {
-                                                          order.assembly_prep === null && order.cutting === "Ok" && 
+                                                          order.assembly_prep === null && order.cutting === "Done" && 
                                                           <div className="inline px-3 py-1 text-sm font-normal rounded-full text-red-500 gap-x-2 bg-red-100/60">
                                                               Pending
                                                           </div>
@@ -236,7 +271,7 @@ const Posts = ({product_orders, postsPerPage, totalPosts, paginate, currentP, in
                                                           </div>
                                                         }
                                                         {
-                                                          order.assembly_prep === "Ok" && 
+                                                          order.assembly_prep === "Done" && 
                                                           <div className="inline px-3 py-1 text-sm font-normal rounded-full text-green-500 gap-x-2 bg-green-100/60">
                                                               {order.assembly_prep}
                                                           </div>
@@ -245,7 +280,7 @@ const Posts = ({product_orders, postsPerPage, totalPosts, paginate, currentP, in
                                                     
                                                     <td className="px-0 py-4 text-sm font-medium whitespace-nowrap">
                                                         {
-                                                          order.assembly_one === null  && order.assembly_prep === "Ok" && 
+                                                          order.assembly_one === null  && order.assembly_prep === "Done" && 
                                                           <div className="inline px-3 py-1 text-sm font-normal rounded-full text-red-500 gap-x-2 bg-red-100/60">
                                                               Pending
                                                           </div>
@@ -257,7 +292,7 @@ const Posts = ({product_orders, postsPerPage, totalPosts, paginate, currentP, in
                                                           </div>
                                                         }
                                                         {
-                                                          order.assembly_one === "Ok" && 
+                                                          order.assembly_one === "Done" && 
                                                           <div className="inline px-3 py-1 text-sm font-normal rounded-full text-green-500 gap-x-2 bg-green-100/60">
                                                               {order.assembly_one}
                                                           </div>
@@ -265,7 +300,7 @@ const Posts = ({product_orders, postsPerPage, totalPosts, paginate, currentP, in
                                                     </td>
                                                     <td className="px-0 py-4 text-sm font-medium whitespace-nowrap">
                                                         {
-                                                          order.assembly_two === null  && order.assembly_one === "Ok" && 
+                                                          order.assembly_two === null  && order.assembly_one === "Done" && 
                                                           <div className="inline px-3 py-1 text-sm font-normal rounded-full text-red-500 gap-x-2 bg-red-100/60">
                                                               Pending
                                                           </div>
@@ -277,7 +312,7 @@ const Posts = ({product_orders, postsPerPage, totalPosts, paginate, currentP, in
                                                           </div>
                                                         }
                                                         {
-                                                          order.assembly_two === "Ok" && 
+                                                          order.assembly_two === "Done" && 
                                                           <div className="inline px-3 py-1 text-sm font-normal rounded-full text-green-500 gap-x-2 bg-green-100/60">
                                                               {order.assembly_two}
                                                           </div>
@@ -285,7 +320,7 @@ const Posts = ({product_orders, postsPerPage, totalPosts, paginate, currentP, in
                                                     </td>
                                                     <td className="px-0 py-4 text-sm font-medium whitespace-nowrap">
                                                         {
-                                                          order.quality_control === null  && order.assembly_two === "Ok" && 
+                                                          order.quality_control === null  && order.assembly_two === "Done" && 
                                                           <div className="inline px-3 py-1 text-sm font-normal rounded-full text-red-500 gap-x-2 bg-red-100/60">
                                                               Pending
                                                           </div>
@@ -297,7 +332,7 @@ const Posts = ({product_orders, postsPerPage, totalPosts, paginate, currentP, in
                                                           </div>
                                                         }
                                                         {
-                                                          order.quality_control === "Ok" && 
+                                                          order.quality_control === "Done" && 
                                                           <div className="inline px-3 py-1 text-sm font-normal rounded-full text-green-500 gap-x-2 bg-green-100/60">
                                                               {order.quality_control}
                                                           </div>
@@ -305,7 +340,7 @@ const Posts = ({product_orders, postsPerPage, totalPosts, paginate, currentP, in
                                                     </td>
                                                     <td className="px-0 py-4 text-sm font-medium whitespace-nowrap">
                                                         {
-                                                          order.finishing_one === null  && order.quality_control === "Ok" && 
+                                                          order.finishing_one === null  && order.quality_control === "Done" && 
                                                           <div className="inline px-3 py-1 text-sm font-normal rounded-full text-red-500 gap-x-2 bg-red-100/60">
                                                               Pending
                                                           </div>
@@ -317,7 +352,7 @@ const Posts = ({product_orders, postsPerPage, totalPosts, paginate, currentP, in
                                                           </div>
                                                         }
                                                         {
-                                                          order.finishing_one === "Ok" && 
+                                                          order.finishing_one === "Done" && 
                                                           <div className="inline px-3 py-1 text-sm font-normal rounded-full text-green-500 gap-x-2 bg-green-100/60">
                                                               {order.finishing_one}
                                                           </div>
@@ -325,7 +360,7 @@ const Posts = ({product_orders, postsPerPage, totalPosts, paginate, currentP, in
                                                     </td>
                                                     <td className="px-0 py-4 text-sm font-medium whitespace-nowrap">
                                                         {
-                                                          order.finishing_two === null  && order.finishing_one === "Ok" && 
+                                                          order.finishing_two === null  && order.finishing_one === "Done" && 
                                                           <div className="inline px-3 py-1 text-sm font-normal rounded-full text-red-500 gap-x-2 bg-red-100/60">
                                                               Pending
                                                           </div>
@@ -337,7 +372,7 @@ const Posts = ({product_orders, postsPerPage, totalPosts, paginate, currentP, in
                                                           </div>
                                                         }
                                                         {
-                                                          order.finishing_two === "Ok" && 
+                                                          order.finishing_two === "Done" && 
                                                           <div className="inline px-3 py-1 text-sm font-normal rounded-full text-green-500 gap-x-2 bg-green-100/60">
                                                               {order.finishing_two}
                                                           </div>
@@ -386,7 +421,7 @@ const Posts = ({product_orders, postsPerPage, totalPosts, paginate, currentP, in
                                                       </div>
                                                     }
                                                     {
-                                                      order.cutting === "Ok" && 
+                                                      order.cutting === "Done" && 
                                                       <div className="inline px-3 py-1 text-sm font-normal rounded-full text-green-500 gap-x-2 bg-green-100/60">
                                                           {order.cutting}
                                                       </div>
@@ -394,7 +429,7 @@ const Posts = ({product_orders, postsPerPage, totalPosts, paginate, currentP, in
                                                 </td>
                                                 <td className="px-0 py-4 text-sm font-medium whitespace-nowrap">
                                                     {
-                                                      order.assembly_prep === null && order.cutting === "Ok" && 
+                                                      order.assembly_prep === null && order.cutting === "Done" && 
                                                       <div className="inline px-3 py-1 text-sm font-normal rounded-full text-red-500 gap-x-2 bg-red-100/60">
                                                           Pending
                                                       </div>
@@ -406,7 +441,7 @@ const Posts = ({product_orders, postsPerPage, totalPosts, paginate, currentP, in
                                                       </div>
                                                     }
                                                     {
-                                                      order.assembly_prep === "Ok" && 
+                                                      order.assembly_prep === "Done" && 
                                                       <div className="inline px-3 py-1 text-sm font-normal rounded-full text-green-500 gap-x-2 bg-green-100/60">
                                                           {order.assembly_prep}
                                                       </div>
@@ -415,7 +450,7 @@ const Posts = ({product_orders, postsPerPage, totalPosts, paginate, currentP, in
                                                 
                                                 <td className="px-0 py-4 text-sm font-medium whitespace-nowrap">
                                                     {
-                                                      order.assembly_one === null  && order.assembly_prep === "Ok" && 
+                                                      order.assembly_one === null  && order.assembly_prep === "Done" && 
                                                       <div className="inline px-3 py-1 text-sm font-normal rounded-full text-red-500 gap-x-2 bg-red-100/60">
                                                           Pending
                                                       </div>
@@ -427,7 +462,7 @@ const Posts = ({product_orders, postsPerPage, totalPosts, paginate, currentP, in
                                                       </div>
                                                     }
                                                     {
-                                                      order.assembly_one === "Ok" && 
+                                                      order.assembly_one === "Done" && 
                                                       <div className="inline px-3 py-1 text-sm font-normal rounded-full text-green-500 gap-x-2 bg-green-100/60">
                                                           {order.assembly_one}
                                                       </div>
@@ -435,7 +470,7 @@ const Posts = ({product_orders, postsPerPage, totalPosts, paginate, currentP, in
                                                 </td>
                                                 <td className="px-0 py-4 text-sm font-medium whitespace-nowrap">
                                                     {
-                                                      order.assembly_two === null  && order.assembly_one === "Ok" && 
+                                                      order.assembly_two === null  && order.assembly_one === "Done" && 
                                                       <div className="inline px-3 py-1 text-sm font-normal rounded-full text-red-500 gap-x-2 bg-red-100/60">
                                                           Pending
                                                       </div>
@@ -447,7 +482,7 @@ const Posts = ({product_orders, postsPerPage, totalPosts, paginate, currentP, in
                                                       </div>
                                                     }
                                                     {
-                                                      order.assembly_two === "Ok" && 
+                                                      order.assembly_two === "Done" && 
                                                       <div className="inline px-3 py-1 text-sm font-normal rounded-full text-green-500 gap-x-2 bg-green-100/60">
                                                           {order.assembly_two}
                                                       </div>
@@ -455,7 +490,7 @@ const Posts = ({product_orders, postsPerPage, totalPosts, paginate, currentP, in
                                                 </td>
                                                 <td className="px-0 py-4 text-sm font-medium whitespace-nowrap">
                                                     {
-                                                      order.quality_control === null  && order.assembly_two === "Ok" && 
+                                                      order.quality_control === null  && order.assembly_two === "Done" && 
                                                       <div className="inline px-3 py-1 text-sm font-normal rounded-full text-red-500 gap-x-2 bg-red-100/60">
                                                           Pending
                                                       </div>
@@ -467,7 +502,7 @@ const Posts = ({product_orders, postsPerPage, totalPosts, paginate, currentP, in
                                                       </div>
                                                     }
                                                     {
-                                                      order.quality_control === "Ok" && 
+                                                      order.quality_control === "Done" && 
                                                       <div className="inline px-3 py-1 text-sm font-normal rounded-full text-green-500 gap-x-2 bg-green-100/60">
                                                           {order.quality_control}
                                                       </div>
@@ -475,7 +510,7 @@ const Posts = ({product_orders, postsPerPage, totalPosts, paginate, currentP, in
                                                 </td>
                                                 <td className="px-0 py-4 text-sm font-medium whitespace-nowrap">
                                                     {
-                                                      order.finishing_one === null  && order.quality_control === "Ok" && 
+                                                      order.finishing_one === null  && order.quality_control === "Done" && 
                                                       <div className="inline px-3 py-1 text-sm font-normal rounded-full text-red-500 gap-x-2 bg-red-100/60">
                                                           Pending
                                                       </div>
@@ -487,7 +522,7 @@ const Posts = ({product_orders, postsPerPage, totalPosts, paginate, currentP, in
                                                       </div>
                                                     }
                                                     {
-                                                      order.finishing_one === "Ok" && 
+                                                      order.finishing_one === "Done" && 
                                                       <div className="inline px-3 py-1 text-sm font-normal rounded-full text-green-500 gap-x-2 bg-green-100/60">
                                                           {order.finishing_one}
                                                       </div>
@@ -495,7 +530,7 @@ const Posts = ({product_orders, postsPerPage, totalPosts, paginate, currentP, in
                                                 </td>
                                                 <td className="px-0 py-4 text-sm font-medium whitespace-nowrap">
                                                     {
-                                                      order.finishing_two === null  && order.finishing_one === "Ok" && 
+                                                      order.finishing_two === null  && order.finishing_one === "Done" && 
                                                       <div className="inline px-3 py-1 text-sm font-normal rounded-full text-red-500 gap-x-2 bg-red-100/60">
                                                           Pending
                                                       </div>
@@ -507,7 +542,7 @@ const Posts = ({product_orders, postsPerPage, totalPosts, paginate, currentP, in
                                                       </div>
                                                     }
                                                     {
-                                                      order.finishing_two === "Ok" && 
+                                                      order.finishing_two === "Done" && 
                                                       <div className="inline px-3 py-1 text-sm font-normal rounded-full text-green-500 gap-x-2 bg-green-100/60">
                                                           {order.finishing_two}
                                                       </div>
@@ -533,7 +568,7 @@ const Posts = ({product_orders, postsPerPage, totalPosts, paginate, currentP, in
                       </div>
                   </div>
               </div>
-              <div className="pb-6">
+              <div className="pb-6 flex justify-between">
                 {
                   isFiltered ?
                   <div className="mt-6 sm:flex sm:items-center sm:justify-between ">
@@ -608,7 +643,10 @@ const Posts = ({product_orders, postsPerPage, totalPosts, paginate, currentP, in
                       </div>
                   </div>
                 }
-                
+                   {/* <button  className='mt-4'>
+                          <ExportToExcel2 apiData={isFiltered? filteredOrders : product_orders} fileName={"Summary-Report Enrod"} name={"Export"} />
+                      </button>
+                 */}
               </div>
 
            

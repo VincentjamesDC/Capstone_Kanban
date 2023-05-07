@@ -22,15 +22,34 @@ const Dashboard = () => {
     getOrders();
   }, [])
   
-  const rmDateCutted = product_orders.map(({ date_cutted, ...rest }) => rest);
-  const rmDatePreped = rmDateCutted.map(({ date_preped, ...rest }) => rest);
-  const rmAssembled1 = rmDatePreped.map(({ date_assembled_one, ...rest }) => rest);
-  const rmAssembled2 = rmAssembled1.map(({ date_assembled_two, ...rest }) => rest);
-  const rmChecked = rmAssembled2.map(({ date_checked, ...rest }) => rest);
-  const rmDataFinished1 = rmChecked.map(({ date_finished_one, ...rest }) => rest);
+  const rmCuttingStart= product_orders.map(({ cutting_start, ...rest }) => rest);
+  const rmCuttingFinish = rmCuttingStart.map(({ cutting_finish, ...rest }) => rest);
+
+  const rmPrepStart = rmCuttingFinish.map(({ assembly_prep_start, ...rest }) => rest);
+  const rmPrepFinish = rmPrepStart.map(({ assembly_prep_finish, ...rest }) => rest);
+
+  const rmAssemblyOneStart = rmPrepFinish.map(({ assembly_one_start, ...rest }) => rest);
+  const rmAssemblyOneFinish = rmAssemblyOneStart.map(({ assembly_one_finish, ...rest }) => rest);
+
+  const rmAssemblyTwoStart = rmAssemblyOneFinish.map(({ assembly_two_start, ...rest }) => rest);
+  const rmAssemblyTwoFinish = rmAssemblyTwoStart.map(({ assembly_two_finish, ...rest }) => rest);
+
+  const rmQCStart = rmAssemblyTwoFinish.map(({ quality_control_start, ...rest }) => rest);
+  const rmQCFinish = rmQCStart.map(({ quality_control_finish, ...rest }) => rest);
+
+  const rmFinishingOneStart = rmQCFinish.map(({ finishing_one_start, ...rest }) => rest);
+  const rmFinishineOneFinish = rmFinishingOneStart.map(({ finishing_one_finish, ...rest }) => rest);
+
+  const rmFinishingTwoStart = rmFinishineOneFinish.map(({ finishing_two_start, ...rest }) => rest);
+  const rmFinishineTwoFinish = rmFinishingTwoStart.map(({ finishing_two_finish, ...rest }) => rest);
+
+  // const rmAssembled1 = rmDatePreped.map(({ date_assembled_one, ...rest }) => rest);
+  // const rmAssembled2 = rmAssembled1.map(({ date_assembled_two, ...rest }) => rest);
+  // const rmChecked = rmAssembled2.map(({ date_checked, ...rest }) => rest);
+  // const rmDataFinished1 = rmChecked.map(({ date_finished_one, ...rest }) => rest);
 
 
-  const filtered2 = rmDataFinished1.filter(product_order => product_order.date_finished !== null && product_order.status == "Reviewed");
+  const filtered2 = rmFinishineTwoFinish.filter(product_order => product_order.date_finished !== null && product_order.status == "Reviewed");
   const filtered = filtered2.map(({ status, ...rest }) => rest);
 
 
@@ -232,7 +251,7 @@ const Dashboard = () => {
               </div>
               <div className="text-sm text-white mt-2 max-h-[30vh] overflow-y-scroll scrollbar-hide">
                   {
-                      product_orders?.filter(product_order => product_order.date_finished !== null && product_order.finishing_two === "Ok" && product_order.status !== "Reviewed").slice(0,7).map(order => {
+                      product_orders?.filter(product_order => product_order.date_finished !== null && product_order.finishing_two === "Done" && product_order.status !== "Reviewed").slice(0,7).map(order => {
                           return(
                             <Link to='/admin/product-orders'> 
                               <div className="bg-gray-800 hover:bg-blue-700  p-2 rounded mt-1 border-b border-gray-100  cursor-pointer">Order # {order.product_order} - Item Code: {order.item_code}</div>
@@ -257,9 +276,6 @@ const Dashboard = () => {
                           )
                       })
                   }
-                    
-
-               
               </div>
             </div>
           </div>

@@ -143,7 +143,7 @@ const OrdersPage = () => {
                         In-Progress
                         </p>
                         <p className="text-lg font-semibold text-gray-200">
-                        {product_orders?.filter(product_order => product_order.cutting === "In-Progress" || product_order.cutting === "Ok" && product_order.date_finished === null).length}
+                        {product_orders?.filter(product_order => product_order.cutting === "In-Progress" || product_order.cutting === "Done" && product_order.date_finished === null).length}
                         </p>
                     </div>
                     </div>
@@ -256,9 +256,9 @@ const OrdersPage = () => {
             <h5 className='py-4 font-bold text-lg'>In-Progress</h5>
             <div className='flex flex-col gap-4 max-h-[60vh] overflow-y-scroll'>
                 {
-                    product_orders?.filter(product_order => product_order.cutting === "In-Progress" || product_order.cutting === "Ok" && product_order.date_finished === null).length > 0 ?
+                    product_orders?.filter(product_order => product_order.cutting === "In-Progress" || product_order.cutting === "Done" && product_order.date_finished === null).length > 0 ?
                     
-                        product_orders?.filter(product_order => product_order.cutting === "In-Progress" || product_order.cutting === "Ok" && product_order.date_finished === null).map(order => {
+                        product_orders?.filter(product_order => product_order.cutting === "In-Progress" || product_order.cutting === "Done" && product_order.date_finished === null).map(order => {
                             return(
                                      <div  key={order.id} className="m-auto h-full w-full max-w-md bg-white shadow-md p-2 border-t-4 border-amber-600 rounded">
                                             <header className="p-2 border-b flex justify-between"> 

@@ -18,7 +18,8 @@ use Illuminate\Support\Str;
 class UserController extends Controller
 {
     public function index(){
-        return new UserCollection(User::all());
+        $users = User::withTrashed()->get();
+        return new UserCollection($users);
     }
 
     public function store(Request $request){
@@ -49,9 +50,55 @@ class UserController extends Controller
         return response()->json("New Admin Created");
     }
 
-    public function destroy($id){
+    // public function update(Request $request, User $user){
+    //     $user->update($request->validated());
+    //     return response()->json("Account Updated");
+    // }
+
+    public function update(Request $request, $id){
+        $user = User::find($id);
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->department = $request->department;
+        $user->role = $request->role;
+        $user->update();
+        return response()->json([
+            'status' => 200,
+            'message' => 'User Soft Deleted'
+        ]
+        );
+    }
+
+    public function restore(Request $request, $id)
+    {
+        $user = User::withTrashed()->findOrFail($id);
+        $user->restore();
+        return response()->json([
+            'status' => 200,
+            'message' => 'User Restored Successfully'
+        ]);
+    }
+
+    public function delete(Request $request, $id)
+    {
         $user = User::findOrFail($id);
-        $user->delete();
-        return response()->json("User Deleted");
+        $user->delete(); // soft delete the user
+        return response()->json([
+            'status' => 200,
+            'message' => 'User Soft Deleted'
+        ]
+        );
+    }
+
+    public function destroy(Request $request, $id)
+    {
+        $user = User::withTrashed()->findOrFail($id);
+        $user->forceDelete(); // permanently delete the user
+        return response()->json([
+            'status' => 200,
+            'message' => 'User Permanently Deleted'
+        ]
+        );
     }
 }

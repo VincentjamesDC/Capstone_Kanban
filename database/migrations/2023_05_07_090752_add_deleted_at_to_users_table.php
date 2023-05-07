@@ -1,3 +1,4 @@
+Mark Raphael
 <?php
 
 use Illuminate\Database\Migrations\Migration;
@@ -9,20 +10,20 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->string('status')->nullable();
+        Schema::table('users', function (Blueprint $table) {
+            $table->softDeletes();
         });
     }
 
     /**
      * Reverse the migrations.
      */
-    public function down(): void
+    public function down()
     {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->dropColumn('status');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropSoftDeletes();
         });
     }
 };

@@ -21,6 +21,7 @@ class UserResource extends JsonResource
             'password' => $this->password,
             'department' => $this->department,
             'role' => $this->role,
+            'deleted_at' => $this->deleted_at,
         ];
     }
 }

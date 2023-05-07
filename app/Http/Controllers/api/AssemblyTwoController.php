@@ -12,9 +12,27 @@ class AssemblyTwoController extends Controller
     public function update(Request $request, $id){
         $order = Orders::find($id);
 
-        $order->assembly_two = $request->assembly_two;
-        $order->date_assembled_two = $request->date_assembled_two;
-        $order->update();
+        if($request->action == "Do") {
+            $order->assembly_two = $request->assembly_two;
+            $order->assembly_two_start = $request->assembly_two_start;
+        }
+
+        if($request->action == "Done") {
+            $order->assembly_two = $request->assembly_two;
+            $order->assembly_two_finish = $request->assembly_two_finish;
+        }
+
+        if($request->action == "Undo") {
+            $order->assembly_two = $request->assembly_two;
+            $order->assembly_two_start = $request->assembly_two_start;
+        }
+
+        if($request->action == "Undone") {
+            $order->assembly_two = $request->assembly_two;
+            $order->assembly_two_finish = $request->assembly_two_finish;
+        }
+
+        $order->save();
         return response()->json([
             'status' => 200,
             'message' => 'Assembly Two Updated'

@@ -12,9 +12,30 @@ class AssemblyPrep extends Controller
     public function update(Request $request, $id){
         $order = Orders::find($id);
 
-        $order->assembly_prep = $request->assembly_prep;
-        $order->date_preped = $request->date_preped;
-        $order->update();
+        if($request->action == "Do") {
+            $order->assembly_prep = $request->assembly_prep;
+            $order->assembly_prep_start = $request->assembly_prep_start;
+        }
+
+        if($request->action == "Done") {
+            $order->assembly_prep = $request->assembly_prep;
+            $order->assembly_prep_finish = $request->assembly_prep_finish;
+        }
+
+        if($request->action == "Undo") {
+            $order->assembly_prep = $request->assembly_prep;
+            $order->assembly_prep_start = $request->assembly_prep_start;
+        }
+
+        if($request->action == "Undone") {
+            $order->assembly_prep = $request->assembly_prep;
+            $order->assembly_prep_finish = $request->assembly_prep_finish;
+        }
+
+        $order->save();
+
+
+
         return response()->json([
             'status' => 200,
             'message' => 'Assembly Prep Updated'

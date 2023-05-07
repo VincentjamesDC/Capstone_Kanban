@@ -32,8 +32,17 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// Route::group(['middleware' => ['auth:sanctum']], function() {
+//     Route::apiResource('usergroup', UserController::class);
+// });
+
 Route::group(['middleware' => ['auth:sanctum']], function() {
-    Route::apiResource('usergroup', UserController::class);
+    Route::get('usergroup', [UserController::class, 'index']);
+    Route::post('usergroup', [UserController::class, 'store']);
+    Route::delete('usergroup/{id}', [UserController::class, 'delete']); // use delete instead of destroy
+    Route::put('usergroup/{id}', [UserController::class, 'update']);
+    Route::patch('usergroup/{id}', [UserController::class, 'update']);
+    Route::put('usergroup/{id}/restore', [UserController::class, 'restore']); // add restore route
 });
 
 Route::group(['prefix' => 'enrod'], function() {

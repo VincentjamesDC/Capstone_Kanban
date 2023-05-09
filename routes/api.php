@@ -11,6 +11,7 @@ use App\Http\Controllers\api\QualityControlController;
 use App\Http\Controllers\api\FinishingOneController;
 use App\Http\Controllers\api\FinishingTwoController;
 use App\Http\Controllers\api\ReviewController;
+use App\Http\Controllers\api\ResetController;
 
 use App\Http\Controllers\api\OrderController;
 
@@ -44,6 +45,8 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::patch('usergroup/{id}', [UserController::class, 'update']);
     Route::put('usergroup/{id}/restore', [UserController::class, 'restore']); // add restore route
 });
+
+Route::middleware('auth:sanctum')->post('/table/clear', [ResetController::class, 'clear']);
 
 Route::group(['prefix' => 'enrod'], function() {
     Route::apiResource('order', OrderController::class);

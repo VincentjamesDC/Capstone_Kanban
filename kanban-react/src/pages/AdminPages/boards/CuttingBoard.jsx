@@ -38,46 +38,46 @@ const CuttingBoard = () => {
                   <tbody>
                     <tr class="text-gray-800 border-b">
                       <th class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">Cutting</th>
-                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.cutting === null).length}</td>
-                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.cutting === "In-Progress").length}</td>
-                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.cutting === "Done").length}</td>
+                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.cutting === null && product_order.status !== "Cancelled").length}</td>
+                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.cutting === "In-Progress" && product_order.status !== "Cancelled").length}</td>
+                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.cutting === "Done" && product_order.status !== "Cancelled").length}</td>
                     </tr>
                     <tr class="text-gray-800 border-b">
                       <th class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">A-1 Prep (Assembly Prep)</th>
-                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.cutting === "Done" && product_order.assembly_prep === null).length}</td>
-                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.cutting === "Done" && product_order.assembly_prep === "In-Progress").length}</td>
-                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.cutting === "Done" && product_order.assembly_prep === "Done").length}</td>
+                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.cutting === "Done" && product_order.assembly_prep === null && product_order.status !== "Cancelled").length}</td>
+                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.cutting === "Done" && product_order.assembly_prep === "In-Progress" && product_order.status !== "Cancelled").length}</td>
+                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.cutting === "Done" && product_order.assembly_prep === "Done" && product_order.status !== "Cancelled").length}</td>
                     </tr>
                     <tr class="text-gray-800 border-b">
                       <th class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">A-1 (Assembly One)</th>
-                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.assembly_prep === "Done" && product_order.assembly_one === null).length}</td>
-                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.assembly_prep === "Done" && product_order.assembly_one === "In-Progress").length}</td>
-                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.assembly_prep === "Done" && product_order.assembly_one === "Done").length}</td>
+                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.assembly_prep === "Done" && product_order.assembly_one === null && product_order.status !== "Cancelled").length}</td>
+                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.assembly_prep === "Done" && product_order.assembly_one === "In-Progress" && product_order.status !== "Cancelled").length}</td>
+                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.assembly_prep === "Done" && product_order.assembly_one === "Done" && product_order.status !== "Cancelled").length}</td>
                     </tr>
                     <tr class="text-gray-800 border-b">
                       <th class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">A-2 (Assembly Two)</th>
-                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.assembly_one === "Done" && product_order.assembly_two === null).length}</td>
-                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.assembly_one === "Done" && product_order.assembly_two === "In-Progress").length}</td>
-                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.assembly_one === "Done" && product_order.assembly_two === "Done").length}</td>
+                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.assembly_one === "Done" && product_order.assembly_two === null && product_order.status !== "Cancelled").length}</td>
+                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.assembly_one === "Done" && product_order.assembly_two === "In-Progress" && product_order.status !== "Cancelled").length}</td>
+                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.assembly_one === "Done" && product_order.assembly_two === "Done" && product_order.status !== "Cancelled").length}</td>
                     </tr>
                     <tr class="text-gray-800 border-b">
                       <th class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">QC (Quality Control)</th>
-                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.assembly_two === "Done" && product_order.quality_control === null).length}</td>
-                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.assembly_two === "Done" && product_order.quality_control === "In-Progress").length}</td>
-                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.assembly_two === "Done" && product_order.quality_control === "Done").length}</td>
+                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.assembly_two === "Done" && product_order.quality_control === null && product_order.status !== "Cancelled").length}</td>
+                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.assembly_two === "Done" && product_order.quality_control === "In-Progress" && product_order.status !== "Cancelled").length}</td>
+                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.assembly_two === "Done" && product_order.quality_control === "Done" && product_order.status !== "Cancelled").length}</td>
                     </tr>
                     <tr class="text-gray-800 border-b">
                       <th class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">F-1 (Finishing One)</th>
-                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.quality_control === "Done" && product_order.finishing_one === null).length}</td>
-                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.quality_control === "Done" && product_order.finishing_one === "In-Progress").length}</td>
-                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.quality_control === "Done" && product_order.finishing_one === "Done").length}</td>
+                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.quality_control === "Done" && product_order.finishing_one === null && product_order.status !== "Cancelled").length}</td>
+                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.quality_control === "Done" && product_order.finishing_one === "In-Progress" && product_order.status !== "Cancelled").length}</td>
+                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.quality_control === "Done" && product_order.finishing_one === "Done" && product_order.status !== "Cancelled").length}</td>
                     </tr>
                     
                     <tr class="text-gray-800 border-b">
                       <th class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">F-2 (Finishing Two)</th>
-                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.finishing_one === "Done" && product_order.finishing_two === null).length}</td>
-                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.finishing_one === "Done" && product_order.finishing_two === "In-Progress").length}</td>
-                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.finishing_one === "Done" && product_order.finishing_two === "Done").length}</td>
+                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.finishing_one === "Done" && product_order.finishing_two === null && product_order.status !== "Cancelled").length}</td>
+                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.finishing_one === "Done" && product_order.finishing_two === "In-Progress" && product_order.status !== "Cancelled").length}</td>
+                      <td class="border-t-0 px-4 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{product_orders?.filter(product_order => product_order.finishing_one === "Done" && product_order.finishing_two === "Done" && product_order.status !== "Cancelled").length}</td>
                     </tr>
                     
                   </tbody>

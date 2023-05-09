@@ -52,7 +52,6 @@ const Dashboard = () => {
   const filtered2 = rmFinishineTwoFinish.filter(product_order => product_order.date_finished !== null && product_order.status == "Reviewed");
   const filtered = filtered2.map(({ status, ...rest }) => rest);
 
-
   const [filteredOrders, setFiltered] = useState([]);
   const [isFiltered, setIsFiltered] = useState(false);
 
@@ -114,7 +113,7 @@ const Dashboard = () => {
                         Ongoing Cutting
                         </p>
                         <p className="text-lg font-semibold text-gray-200">
-                        {product_orders?.filter(product_order => product_order.cutting === "In-Progress").length}
+                        {product_orders?.filter(product_order => product_order.cutting === "In-Progress" && product_order.status !== "Cancelled").length}
                         </p>
                     </div>
                     </div>
@@ -130,7 +129,7 @@ const Dashboard = () => {
                         Ongoing Assembly-1
                         </p>
                         <p className="text-lg font-semibold text-gray-200">
-                        {product_orders?.filter(product_order => product_order.assembly_one === "In-Progress").length}
+                        {product_orders?.filter(product_order => product_order.assembly_one === "In-Progress" && product_order.status !== "Cancelled").length}
                         </p>
                     </div>
                     </div>
@@ -146,7 +145,7 @@ const Dashboard = () => {
                         Ongoing Assembly-2
                         </p>
                         <p className="text-lg font-semibold text-gray-200">
-                        {product_orders?.filter(product_order => product_order.assembly_two === "In-Progress").length}
+                        {product_orders?.filter(product_order => product_order.assembly_two === "In-Progress" && product_order.status !== "Cancelled").length}
                         </p>
                     </div>
                     </div>
@@ -162,7 +161,7 @@ const Dashboard = () => {
                         Ongoing QC
                         </p>
                         <p className="text-lg font-semibold text-gray-200">
-                        {product_orders?.filter(product_order => product_order.quality_control === "In-Progress").length}
+                        {product_orders?.filter(product_order => product_order.quality_control === "In-Progress" && product_order.status !== "Cancelled").length}
                         </p>
                     </div>
                     </div>
@@ -179,7 +178,7 @@ const Dashboard = () => {
                         Ongoing Finishing-1
                         </p>
                         <p className="text-lg font-semibold text-gray-200">
-                        {product_orders?.filter(product_order => product_order.finishing_one === "In-Progress").length}
+                        {product_orders?.filter(product_order => product_order.finishing_one === "In-Progress" && product_order.status !== "Cancelled").length}
                         </p>
                     </div>
                     </div>
@@ -195,7 +194,7 @@ const Dashboard = () => {
                         Ongoing Finishing-2
                         </p>
                         <p className="text-lg font-semibold text-gray-200">
-                        {product_orders?.filter(product_order => product_order.finishing_two === "In-Progress").length}
+                        {product_orders?.filter(product_order => product_order.finishing_two === "In-Progress" && product_order.status !== "Cancelled").length}
                         </p>
                     </div>
                     </div>
@@ -204,7 +203,7 @@ const Dashboard = () => {
         <div className="">
             <h3 className="text-lg font-semibold">Enrod Orders Summary</h3>
           </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 py-4 gap-4 text-gray-800 ">
+        <div className="grid grid-cols-1 md:grid-cols-4 xl:grid-cols-5 py-4 gap-4 text-gray-800 ">
           <div className="md:col-span-2 xl:col-span-1">
             <div className="rounded bg-white p-3 border shadow-md border-gray-200">
               <div className="flex justify-between py-1 text-gray-800 ">
@@ -213,7 +212,7 @@ const Dashboard = () => {
               </div>
               <div className="text-sm text-white mt-2 max-h-[30vh] overflow-y-scroll scrollbar-hide">
               {
-                    product_orders?.filter(product_order => product_order.date_finished === null && product_order.cutting === null).slice(0,7).map(order => {
+                    product_orders?.filter(product_order => product_order.date_finished === null && product_order.cutting === null && product_order.status !== "Cancelled").slice(0,7).map(order => {
                         return(
                           <Link to='/admin/product-orders'> 
                             <div className="bg-gray-800 hover:bg-blue-700 p-2 rounded mt-1 border-b cursor-pointer">Order # {order.product_order} - Item Code: {order.item_code}</div>
@@ -232,7 +231,7 @@ const Dashboard = () => {
               </div>
               <div className="text-sm text-white mt-2 max-h-[30vh] overflow-y-scroll scrollbar-hide">
                 {
-                    product_orders?.filter(product_order => product_order.date_finished === null && product_order.cutting !== null).slice(0,7).map(order => {
+                    product_orders?.filter(product_order => product_order.date_finished === null && product_order.cutting !== null && product_order.status !== "Cancelled").slice(0,7).map(order => {
                         return(
                           <Link to='/admin/product-orders'>
                             <div class="bg-gray-800 hover:bg-blue-700 p-2 rounded mt-1 border-b  cursor-pointer">Order # {order.product_order} - Item Code: {order.item_code}</div>
@@ -251,7 +250,7 @@ const Dashboard = () => {
               </div>
               <div className="text-sm text-white mt-2 max-h-[30vh] overflow-y-scroll scrollbar-hide">
                   {
-                      product_orders?.filter(product_order => product_order.date_finished !== null && product_order.finishing_two === "Done" && product_order.status !== "Reviewed").slice(0,7).map(order => {
+                      product_orders?.filter(product_order => product_order.date_finished !== null && product_order.finishing_two === "Done" && product_order.status !== "Reviewed" && product_order.status !== "Cancelled").slice(0,7).map(order => {
                           return(
                             <Link to='/admin/product-orders'> 
                               <div className="bg-gray-800 hover:bg-blue-700  p-2 rounded mt-1 border-b border-gray-100  cursor-pointer">Order # {order.product_order} - Item Code: {order.item_code}</div>
@@ -262,6 +261,7 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
+       
           <div className='md:col-span-2 xl:col-span-1'>
             <div className="rounded bg-white shadow-md border-gray-200 border p-3">
               <div className="flex justify-between py-1 text-gray-800 ">
@@ -270,12 +270,31 @@ const Dashboard = () => {
               </div>
               <div className="text-sm text-white mt-2 max-h-[30vh] overflow-y-scroll scrollbar-hide">
                   {
-                      product_orders?.filter(product_order => product_order.date_finished !== null && product_order.status === "Reviewed").slice(0,7).map(order => {
+                      product_orders?.filter(product_order => product_order.date_finished !== null && product_order.status === "Reviewed" && product_order.status !== "Cancelled").slice(0,7).map(order => {
                           return(
                               <div className="bg-gray-800 hover:bg-blue-700  p-2 rounded mt-1 border-b border-gray-100  cursor-pointer">Order # {order.product_order} - Item Code: {order.item_code}</div>
                           )
                       })
                   }
+              </div>
+            </div>
+          </div>
+          <div className='md:col-span-2 xl:col-span-1'>
+            <div className="rounded bg-white p-3 border shadow-md border-gray-200">
+              <div className="flex justify-between py-1 text-gray-800">
+                <h3 className="text-sm font-semibold">Cancelled Orders</h3>
+                <svg className="h-4 fill-current text-gray-600 dark:text-gray-500 cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 10a1.999 1.999 0 1 0 0 4 1.999 1.999 0 1 0 0-4zm7 0a1.999 1.999 0 1 0 0 4 1.999 1.999 0 1 0 0-4zm7 0a1.999 1.999 0 1 0 0 4 1.999 1.999 0 1 0 0-4z" /></svg>
+              </div>
+              <div className="text-sm text-white mt-2 max-h-[30vh] overflow-y-scroll scrollbar-hide">
+                {
+                    product_orders?.filter(product_order => product_order.status === "Cancelled").slice(0,7).map(order => {
+                        return(
+                          <Link to='/admin/cancelled-orders'>
+                            <div class="bg-gray-800 hover:bg-blue-700 p-2 rounded mt-1 border-b  cursor-pointer">Order # {order.product_order} - Item Code: {order.item_code}</div>
+                          </Link>
+                        )
+                    })
+                }
               </div>
             </div>
           </div>

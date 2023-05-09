@@ -150,7 +150,7 @@ const PrepBoard = () => {
                         To Do
                         </p>
                         <p className="text-lg font-semibold text-gray-200">
-                        {product_orders?.filter(product_order => product_order.assembly_prep === null && product_order.cutting_finish !== null).length}
+                        {product_orders?.filter(product_order => product_order.assembly_prep === null && product_order.cutting_finish !== null && product_order.status !== "Cancelled").length}
                         </p>
                     </div>
                     </div>
@@ -166,7 +166,7 @@ const PrepBoard = () => {
                         In-Progress
                         </p>
                         <p className="text-lg font-semibold text-gray-200">
-                        {product_orders?.filter(product_order => product_order.assembly_prep === "In-Progress" && product_order.cutting_finish !== null).length}                        </p>
+                        {product_orders?.filter(product_order => product_order.assembly_prep === "In-Progress" && product_order.cutting_finish !== null && product_order.status !== "Cancelled").length}                        </p>
                     </div>
                     </div>
                     <div className="flex items-center p-4 rounded-lg shadow-xs bg-gray-800">
@@ -182,7 +182,7 @@ const PrepBoard = () => {
                         Completed Orders
                         </p>
                         <p className="text-lg font-semibold text-gray-200">
-                        {product_orders?.filter(product_order => product_order.assembly_prep_finish !== null  && product_order.cutting_finish !== null).length}                        </p>
+                        {product_orders?.filter(product_order => product_order.assembly_prep_finish !== null  && product_order.cutting_finish !== null && product_order.status !== "Cancelled").length}                        </p>
                     </div>
                     </div>
                 </div>
@@ -195,8 +195,8 @@ const PrepBoard = () => {
                 <h5 className='py-4 font-bold text-lg'>To Do</h5>
                 <div className='flex flex-col gap-4 max-h-[60vh] overflow-y-scroll'>
                     {
-                        product_orders?.filter(product_order => product_order.assembly_prep === null  && product_order.cutting === "Done").length > 0 ?
-                        product_orders?.filter(product_order => (product_order.assembly_prep === null && product_order.cutting === "Done")).map(order => {
+                        product_orders?.filter(product_order => product_order.assembly_prep === null  && product_order.cutting === "Done" && product_order.status !== "Cancelled").length > 0 ?
+                        product_orders?.filter(product_order => (product_order.assembly_prep === null && product_order.cutting === "Done" && product_order.status !== "Cancelled")).map(order => {
                             return(
                                     <div  key={order.id} className="m-auto h-full w-full max-w-md bg-white shadow-md p-2 border-t-4 border-blue-600 rounded">
                                             <header className="p-2 border-b flex"> 
@@ -264,9 +264,9 @@ const PrepBoard = () => {
                 <h5 className='py-4 font-bold text-lg'>In-Progress</h5>
                 <div className='flex flex-col gap-4 max-h-[60vh] overflow-y-scroll'>
                     {
-                        product_orders?.filter(product_order => product_order.assembly_prep === "In-Progress"  && product_order.cutting === "Done").length > 0 ?
+                        product_orders?.filter(product_order => product_order.assembly_prep === "In-Progress"  && product_order.cutting === "Done" && product_order.status !== "Cancelled").length > 0 ?
                         
-                            product_orders?.filter(product_order => (product_order.assembly_prep === "In-Progress" && product_order.cutting === "Done")).map(order => {
+                            product_orders?.filter(product_order => (product_order.assembly_prep === "In-Progress" && product_order.cutting === "Done" && product_order.status !== "Cancelled")).map(order => {
                                 return(
                                         <div  key={order.id} className="m-auto h-full w-full max-w-md bg-white shadow-md p-2 border-t-4 border-amber-600 rounded">
                                                 <header className="px-2 py-1 border-b flex justify-between"> 
@@ -348,7 +348,7 @@ const PrepBoard = () => {
                 <h5 className='py-4 font-bold text-lg'>Done</h5>
                 <div className='flex flex-col gap-4 max-h-[60vh] overflow-y-scroll'>
                     {
-                        product_orders?.filter(product_order => (product_order.assembly_prep === "Done" && product_order.cutting === "Done")).map(order => {
+                        product_orders?.filter(product_order => (product_order.assembly_prep === "Done" && product_order.cutting === "Done" && product_order.status !== "Cancelled")).map(order => {
                             return(
                                     <div  key={order.id} className="m-auto h-full w-full max-w-md bg-white shadow-md p-2 border-t-4 border-green-600 rounded">
                                             <header className="px-2 py-1 border-b flex justify-between"> 

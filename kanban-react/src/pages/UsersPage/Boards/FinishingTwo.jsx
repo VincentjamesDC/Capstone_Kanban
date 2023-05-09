@@ -153,7 +153,7 @@ const FinishingTwo = () => {
                         To Do
                         </p>
                         <p className="text-lg font-semibold text-gray-200">
-                        {product_orders?.filter(product_order => product_order.finishing_two === null  && product_order.finishing_one === "Done").length}
+                        {product_orders?.filter(product_order => product_order.finishing_two === null  && product_order.finishing_one === "Done" && product_order.status !== "Cancelled").length}
                         </p>
                     </div>
                     </div>
@@ -169,7 +169,7 @@ const FinishingTwo = () => {
                         In-Progress
                         </p>
                         <p className="text-lg font-semibold text-gray-200">
-                        {product_orders?.filter(product_order => product_order.finishing_two === "In-Progress" && product_order.finishing_one === "Done").length}
+                        {product_orders?.filter(product_order => product_order.finishing_two === "In-Progress" && product_order.finishing_one === "Done" && product_order.status !== "Cancelled").length}
                         </p>
                     </div>
                     </div>
@@ -186,7 +186,7 @@ const FinishingTwo = () => {
                         Completed Orders
                         </p>
                         <p className="text-lg font-semibold text-gray-200">
-                        {product_orders?.filter(product_order => product_order.finishing_two_finish !== null && product_order.finishing_one_finish !==null).length}
+                        {product_orders?.filter(product_order => product_order.finishing_two_finish !== null && product_order.finishing_one_finish !==null && product_order.status !== "Cancelled").length}
                         </p>
                     </div>
                     </div>
@@ -200,8 +200,8 @@ const FinishingTwo = () => {
                 <h5 className='py-4 font-bold text-lg'>To Do</h5>
                 <div className='flex flex-col gap-4 max-h-[60vh] overflow-y-scroll'>
                     {
-                        product_orders?.filter(product_order => product_order.finishing_two === null  && product_order.finishing_one === "Done").length > 0 ?
-                        product_orders?.filter(product_order => (product_order.finishing_two === null && product_order.finishing_one === "Done")).map(order => {
+                        product_orders?.filter(product_order => product_order.finishing_two === null  && product_order.finishing_one === "Done" && product_order.status !== "Cancelled").length > 0 ?
+                        product_orders?.filter(product_order => (product_order.finishing_two === null && product_order.finishing_one === "Done" && product_order.status !== "Cancelled")).map(order => {
                             return(
                                     <div  key={order.id} className="m-auto h-full w-full max-w-md bg-white shadow-md p-2 border-t-4 border-blue-600 rounded">
                                             <header className="p-2 border-b flex"> 
@@ -269,9 +269,9 @@ const FinishingTwo = () => {
                 <h5 className='py-4 font-bold text-lg'>In-Progress</h5>
                 <div className='flex flex-col gap-4 max-h-[60vh] overflow-y-scroll'>
                     {
-                        product_orders?.filter(product_order => product_order.finishing_two === "In-Progress"  && product_order.finishing_one === "Done").length > 0 ?
+                        product_orders?.filter(product_order => product_order.finishing_two === "In-Progress"  && product_order.finishing_one === "Done" && product_order.status !== "Cancelled").length > 0 ?
                         
-                            product_orders?.filter(product_order => (product_order.finishing_two === "In-Progress" && product_order.finishing_one === "Done")).map(order => {
+                            product_orders?.filter(product_order => (product_order.finishing_two === "In-Progress" && product_order.finishing_one === "Done" && product_order.status !== "Cancelled")).map(order => {
                                 return(
                                         <div  key={order.id} className="m-auto h-full w-full max-w-md bg-white shadow-md p-2 border-t-4 border-amber-600 rounded">
                                                 <header className="px-2 py-1 border-b flex justify-between"> 
@@ -353,7 +353,7 @@ const FinishingTwo = () => {
                 <h5 className='py-4 font-bold text-lg'>Done</h5>
                 <div className='flex flex-col gap-4 max-h-[60vh] overflow-y-scroll'>
                     {
-                        product_orders?.filter(product_order => (product_order.finishing_two === "Done" && product_order.finishing_one === "Done")).map(order => {
+                        product_orders?.filter(product_order => (product_order.finishing_two === "Done" && product_order.finishing_one === "Done" && product_order.status !== "Cancelled")).map(order => {
                             return(
                                     <div  key={order.id} className="m-auto h-full w-full max-w-md bg-white shadow-md p-2 border-t-4 border-green-600 rounded">
                                              <header className="px-2 py-1 border-b flex justify-between"> 

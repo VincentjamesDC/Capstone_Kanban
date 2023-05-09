@@ -60,30 +60,27 @@ const OrdersPage = () => {
     }
 
     const DeliverForm = {
-        week_issued: "",
-        product_order: "",
-        item_code: "",
-        description: "",
-        quantity: "",
-        cutting: "",
-        date_cutted: "",
-        assembly_prep: "",
-        date_preped: "",
-        assembly_one: "",
-        date_assembled_one: "",
-        assembly_two: "",
-        date_assembled_two: "",
-        quality_control: "",
-        date_checked: "",
-        finishing_one: "",
-        date_finished_one: "",
-        finishing_two: "",
-        date_started: "",
-        date_finished: "",
         status: "Reviewed",
     }
 
+    const CancelForm = {
+        status: "Cancelled",
+    }
+
+
     const [review_result, setReviewResult ] = useState(null);
+    const [cancel_result, setCancelResult ] = useState(null);
+
+    function closeCancelResult(){
+        setTimeout(() => {
+            setCancelResult(null);
+        }, 5000)
+      }
+    
+    function closeCancelResultFast(){
+        setCancelResult(null);
+    }
+
 
     function closeReviewResult(){
         setTimeout(() => {
@@ -103,18 +100,28 @@ const OrdersPage = () => {
             await getOrders();
             setReviewResult(response.status);
             closeReviewResult();
-            navigate("/admin/product-orders");
         }
-      };
+    };
+
+    const handleCancelled = async (order_id) => {
+        let status = "Cancelled";
+        const response = await axios.put("api/enrod/status/" + order_id, {status});
+        if(response.data.status === 200){
+            await getOrders();
+            setCancelResult(response.status);
+            setDeleteModal(false);
+            closeCancelResult();
+        }
+    };
 
   return (
     <div>
         <div className="pt-5 md:px-12">
-            <div className="h-full overflow-y-auto">
+            <div className="h-full  overflow-y-auto">
                 <div className="container  mx-auto grid">
                 <h5 className='font-medium mb-4'>Product Orders</h5>
                 <div className="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-3">
-                    <div className="flex items-center p-4 rounded-lg shadow-xs bg-gray-800">
+                    <div className="flex items-center p-4 rounded-lg shadow-xs bg-gray-800 col-span-1">
                     <div className="p-3 mr-4 rounded-full text-orange-100 bg-orange-500">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
                             <path fillRule="evenodd" d="M15.988 3.012A2.25 2.25 0 0118 5.25v6.5A2.25 2.25 0 0115.75 14H13.5V7A2.5 2.5 0 0011 4.5H8.128a2.252 2.252 0 011.884-1.488A2.25 2.25 0 0112.25 1h1.5a2.25 2.25 0 012.238 2.012zM11.5 3.25a.75.75 0 01.75-.75h1.5a.75.75 0 01.75.75v.25h-3v-.25z" clipRule="evenodd" />
@@ -127,11 +134,11 @@ const OrdersPage = () => {
                         To Do
                         </p>
                         <p className="text-lg font-semibold text-gray-200">
-                        {product_orders?.filter(product_order => product_order.cutting === null).length}
+                        {product_orders?.filter(product_order => product_order.cutting === null && product_order.status !== "Cancelled").length}
                         </p>
                     </div>
                     </div>
-                    <div className="flex items-center p-4 rounded-lg shadow-xs bg-gray-800">
+                    <div className="flex items-center p-4 rounded-lg shadow-xs bg-gray-800 col-span-1">
                         <div className="p-3 mr-4  rounded-full text-teal-100 bg-teal-500">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
                                 <path fillRule="evenodd" d="M15.988 3.012A2.25 2.25 0 0118 5.25v6.5A2.25 2.25 0 0115.75 14H13.5V7A2.5 2.5 0 0011 4.5H8.128a2.252 2.252 0 011.884-1.488A2.25 2.25 0 0112.25 1h1.5a2.25 2.25 0 012.238 2.012zM11.5 3.25a.75.75 0 01.75-.75h1.5a.75.75 0 01.75.75v.25h-3v-.25z" clipRule="evenodd" />
@@ -143,11 +150,11 @@ const OrdersPage = () => {
                         In-Progress
                         </p>
                         <p className="text-lg font-semibold text-gray-200">
-                        {product_orders?.filter(product_order => product_order.cutting === "In-Progress" || product_order.cutting === "Done" && product_order.date_finished === null).length}
+                        {product_orders?.filter(product_order => (product_order.cutting === "In-Progress" || product_order.cutting === "Done") && product_order.date_finished === null && product_order.status !== "Cancelled").length}
                         </p>
                     </div>
                     </div>
-                    <div className="flex items-center p-4 rounded-lg shadow-xs bg-gray-800">
+                    <div className="flex items-center p-4 rounded-lg shadow-xs bg-gray-800 col-span-1">
                     
                     <div className="p-3 mr-4  rounded-full text-blue-100 bg-blue-500">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
@@ -160,7 +167,7 @@ const OrdersPage = () => {
                         Completed Orders
                         </p>
                         <p className="text-lg font-semibold text-gray-200">
-                        {product_orders?.filter(product_order => product_order.date_finished !== null && product_order.status !== "Reviewed").length}
+                        {product_orders?.filter(product_order => product_order.date_finished !== null && product_order.status !== "Reviewed" && product_order.status !== "Cancelled").length}
                         </p>
                     </div>
                     </div>
@@ -176,8 +183,8 @@ const OrdersPage = () => {
             <h5 className='py-4 font-bold text-lg'>To Do</h5>
             <div className='flex flex-col gap-4 max-h-[60vh] overflow-y-scroll'>
                 {
-                    product_orders?.filter(product_order => product_order.cutting === null).length > 0 ?
-                    product_orders?.filter(product_order => product_order.cutting === null).map(order => {
+                    product_orders?.filter(product_order => product_order.cutting === null && product_order.status !== "Cancelled").length > 0 ?
+                    product_orders?.filter(product_order => product_order.cutting === null && product_order.status !== "Cancelled").map(order => {
                         return(
                                  <div  key={order.id} className="m-auto h-full w-full max-w-md bg-white shadow-md p-2 border-t-4 border-blue-600 rounded">
                                         <header className="p-2 border-b flex justify-between"> 
@@ -192,12 +199,12 @@ const OrdersPage = () => {
                                                     </svg>
                                                 </button>
                                                 <button onClick={() => {handleDelete(order.id, order.product_order)}} className='text-sm font-medium '>
-                                                    {/* <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                                                        <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
-                                                    </svg> */}
-                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-red-700 hover:scale-105" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-red-700 hover:scale-105" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
                                                     </svg>
+                                                    {/* <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-red-700 hover:scale-105" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                    </svg> */}
                                                 </button>
                                             </div>
                                         </header>
@@ -256,9 +263,9 @@ const OrdersPage = () => {
             <h5 className='py-4 font-bold text-lg'>In-Progress</h5>
             <div className='flex flex-col gap-4 max-h-[60vh] overflow-y-scroll'>
                 {
-                    product_orders?.filter(product_order => product_order.cutting === "In-Progress" || product_order.cutting === "Done" && product_order.date_finished === null).length > 0 ?
+                    product_orders?.filter(product_order => (product_order.cutting === "In-Progress" || product_order.cutting === "Done") && product_order.date_finished === null && product_order.status !== "Cancelled").length > 0 ?
                     
-                        product_orders?.filter(product_order => product_order.cutting === "In-Progress" || product_order.cutting === "Done" && product_order.date_finished === null).map(order => {
+                        product_orders?.filter(product_order => (product_order.cutting === "In-Progress" || product_order.cutting === "Done") && product_order.date_finished === null && product_order.status !== "Cancelled").map(order => {
                             return(
                                      <div  key={order.id} className="m-auto h-full w-full max-w-md bg-white shadow-md p-2 border-t-4 border-amber-600 rounded">
                                             <header className="p-2 border-b flex justify-between"> 
@@ -273,12 +280,12 @@ const OrdersPage = () => {
                                                         </svg>
                                                     </button>
                                                     <button onClick={() => {handleDelete(order.id, order.product_order)}} className='text-sm font-medium '>
-                                                        {/* <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                                                            <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
-                                                        </svg> */}
-                                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-red-700 hover:scale-105" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-red-700 hover:scale-105" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
                                                         </svg>
+                                                        {/* <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-red-700 hover:scale-105" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                        </svg> */}
                                                     </button>
                                                 </div>
                                             </header>
@@ -339,7 +346,7 @@ const OrdersPage = () => {
             <h5 className='py-4 font-bold text-lg'>Completed</h5>
             <div className='flex flex-col gap-4 max-h-[60vh] overflow-y-scroll'>
                 {
-                    product_orders?.filter(product_order => product_order.date_finished !== null && product_order.status !== "Reviewed").map(order => {
+                    product_orders?.filter(product_order => product_order.date_finished !== null && product_order.status !== "Reviewed" && product_order.status !== "Cancelled").map(order => {
                         return(
                                  <div  key={order.id} className="m-auto h-full w-full max-w-md bg-white shadow-md p-2 border-t-4 border-green-600 rounded">
                                         <header className="p-2 border-b flex justify-between"> 
@@ -434,15 +441,15 @@ const OrdersPage = () => {
     }
 
     {
-        del_result && 
-        <FadeInOut show={del_result} duration={150}>
+        cancel_result && 
+        <FadeInOut show={cancel_result} duration={150}>
             <div className='w-1/6 absolute bottom-2 right-6'>
                 <div id="alert-border-3" className="flex p-4 mb-4 border-t-4  text-white bg-gray-800 border-green-800 rounded-md" role="alert">
                     <svg className="flex-shrink-0 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"></path></svg>
                     <div className="ml-3 text-sm font-medium">
-                        <p>Item Deleted!</p>
+                        <p>Order Cancelled!</p>
                     </div>
-                    <button onClick={closeDelResultFast} type="button" className="ml-auto -mx-1.5 -my-1.5   rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 inline-flex h-8 w-8 bg-gray-800 text-green-400 hover:bg-gray-700"  data-dismiss-target="#alert-border-3" aria-label="Close">
+                    <button onClick={closeCancelResultFast} type="button" className="ml-auto -mx-1.5 -my-1.5   rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 inline-flex h-8 w-8 bg-gray-800 text-green-400 hover:bg-gray-700"  data-dismiss-target="#alert-border-3" aria-label="Close">
                     <span className="sr-only">Dismiss</span>
                     <svg aria-hidden="true" className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
                     </button>
@@ -512,7 +519,7 @@ const OrdersPage = () => {
         </FadeInOut>
         }
 
-{
+        {
             updateModal && 
             <FadeInOut show={updateModal} duration={200}>
             <div id="authentication-modal" tabIndex="-1" aria-hidden="true" className="fixed top-0 bg-zinc-800/60 left-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] md:h-full">
@@ -582,9 +589,9 @@ const OrdersPage = () => {
                         <span className="sr-only">Close modal</span>
                     </button>
                     <div className="px-6 py-6 lg:px-8">
-                        <h3 className="mb-4 text-xl font-medium text-gray-900 ">Delete Product Order {delOrder}?</h3>
+                        <h3 className="mb-4 text-xl font-medium text-gray-900 ">Cancel Product Order {delOrder}?</h3>
                         <div className='flex gap-2'>
-                        <button type="button" onClick={() => deleteOrder2()} className="flex items-center justify-center w-full text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                        <button type="button" onClick={() => handleCancelled(delID)} className="flex items-center justify-center w-full text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
                             {
                                 loading ? <div role="status">
                                 <svg aria-hidden="true" className="w-5 h-5 mr-2 text-gray-200 animate-spin dark:text-gray-300 fill-white" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -592,7 +599,7 @@ const OrdersPage = () => {
                                     <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
                                 </svg>
                                 <span className="sr-only">Loading...</span>
-                            </div> : <span className="inline-block " id='sign-in'>Delete</span>
+                            </div> : <span className="inline-block " id='sign-in'>Confirm</span>
                             }
                             
                             

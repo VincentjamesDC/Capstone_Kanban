@@ -19,7 +19,6 @@ const Posts = ({product_orders, postsPerPage, totalPosts, paginate, currentP, in
     const [isFiltered, setIsFiltered] = useState(false);
     const [searchValue, setSearchValue] = useState('');
 
-
     const [ progressFilter, setProgressFilter] = useState('');
     const [ weekFilter, setWeekFilter] = useState('');
 
@@ -626,8 +625,6 @@ const Posts = ({product_orders, postsPerPage, totalPosts, paginate, currentP, in
                                 </a>
                             }
                           
-                        
-
                           {currentP < pageNumbers.length &&
                                 <a onClick={() =>paginate(currentP + 1)}  className=" cursor-pointer flex items-center justify-center w-1/2 px-5 py-2 text-sm text-white capitalize transition-colors duration-200 bg-gray-800 border rounded-md sm:w-auto gap-x-2 hover:bg-gray-800 ">
                                     <span>
@@ -648,10 +645,9 @@ const Posts = ({product_orders, postsPerPage, totalPosts, paginate, currentP, in
                       </button>
                  */}
               </div>
-
-           
           </section>
         </div>
+     
       </div>
   )
 }

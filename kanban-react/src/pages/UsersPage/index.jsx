@@ -67,6 +67,17 @@ const UserBoard = () => {
                     <span className="ml-2 text-sm tracking-wide truncate">Completed Task</span>
                   </Link>
                 </li>
+                <li>
+                  <Link to='/dashboard/cancelled-orders' className="relative flex flex-row items-center h-11 focus:outline-none hover:bg-blue-800  text-white-600 hover:text-white-800 border-l-4 border-transparent hover:border-blue-500  pr-6">
+                    <span className="inline-flex justify-center items-center ml-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z" />
+                          <path fillRule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm5 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" clipRule="evenodd" />
+                        </svg>
+                    </span>
+                    <span className="ml-2 text-sm tracking-wide truncate">Cancelled Orders</span>
+                  </Link>
+                </li>
                 {/* -------------------------- Redirect based on the deparment of the users ---------------------------------- */}
 
                 {
@@ -78,7 +89,7 @@ const UserBoard = () => {
                 
                     <span className="ml-2 text-sm tracking-wide truncate">To do list</span>
                     {
-                      product_orders?.filter(product_order => product_order.cutting === null).length > 0 &&
+                      product_orders?.filter(product_order => product_order.cutting === null && product_order.status !== "Cancelled").length > 0 &&
                       <span className="hidden md:block px-2 py-0.5 ml-auto text-xs font-medium tracking-wide text-blue-500 bg-indigo-50 rounded-full">New</span>
                     }
                   </Link>
@@ -92,7 +103,7 @@ const UserBoard = () => {
                     </span>
                     <span className="ml-2 text-sm tracking-wide truncate">To do list</span>
                     {
-                      product_orders?.filter(product_order => product_order.assembly_prep === null  && product_order.cutting === "Done").length > 0 && 
+                      product_orders?.filter(product_order => product_order.assembly_prep === null  && product_order.cutting === "Done" && product_order.status !== "Cancelled").length > 0 && 
                       <span className="hidden md:block px-2 py-0.5 ml-auto text-xs font-medium tracking-wide text-blue-500 bg-indigo-50 rounded-full">New</span>
                     }
                   </Link>
@@ -106,7 +117,7 @@ const UserBoard = () => {
                     </span>
                     <span className="ml-2 text-sm tracking-wide truncate">To do list</span>
                     {
-                    product_orders?.filter(product_order => product_order.assembly_one === null  && product_order.assembly_prep === "Done").length > 0 &&
+                    product_orders?.filter(product_order => product_order.assembly_one === null  && product_order.assembly_prep === "Done" && product_order.status !== "Cancelled").length > 0 &&
                     <span className="hidden md:block px-2 py-0.5 ml-auto text-xs font-medium tracking-wide text-blue-500 bg-indigo-50 rounded-full">New</span>
                     }                  
                   </Link>
@@ -120,7 +131,7 @@ const UserBoard = () => {
                     </span>
                     <span className="ml-2 text-sm tracking-wide truncate">To do list</span>
                     {
-                    product_orders?.filter(product_order => product_order.assembly_two === null  && product_order.assembly_one === "Done").length > 0 &&
+                    product_orders?.filter(product_order => product_order.assembly_two === null  && product_order.assembly_one === "Done"  && product_order.status !== "Cancelled").length > 0 &&
                     <span className="hidden md:block px-2 py-0.5 ml-auto text-xs font-medium tracking-wide text-blue-500 bg-indigo-50 rounded-full">New</span>
                     }                       
                   </Link>
@@ -134,7 +145,7 @@ const UserBoard = () => {
                     </span>
                     <span className="ml-2 text-sm tracking-wide truncate">To do list</span>
                     {
-                    product_orders?.filter(product_order => product_order.quality_control === null  && product_order.assembly_two === "Done").length > 0 &&
+                    product_orders?.filter(product_order => product_order.quality_control === null  && product_order.assembly_two === "Done"  && product_order.status !== "Cancelled").length > 0 &&
                     <span className="hidden md:block px-2 py-0.5 ml-auto text-xs font-medium tracking-wide text-blue-500 bg-indigo-50 rounded-full">New</span>
                     }                       
                   </Link>
@@ -149,7 +160,7 @@ const UserBoard = () => {
                     </span>
                     <span className="ml-2 text-sm tracking-wide truncate">To do list</span>
                     {
-                    product_orders?.filter(product_order => product_order.finishing_one === null  && product_order.quality_control === "Done").length > 0 &&
+                    product_orders?.filter(product_order => product_order.finishing_one === null  && product_order.quality_control === "Done"  && product_order.status !== "Cancelled").length > 0 &&
                     <span className="hidden md:block px-2 py-0.5 ml-auto text-xs font-medium tracking-wide text-blue-500 bg-indigo-50 rounded-full">New</span>
                     }       
                   </Link>
@@ -163,7 +174,7 @@ const UserBoard = () => {
                     </span>
                     <span className="ml-2 text-sm tracking-wide truncate">To do list</span>
                     {
-                    product_orders?.filter(product_order => product_order.finishing_two === null  && product_order.finishing_one === "Done").length > 0 &&
+                    product_orders?.filter(product_order => product_order.finishing_two === null  && product_order.finishing_one === "Done"  && product_order.status !== "Cancelled").length > 0 &&
                     <span className="hidden md:block px-2 py-0.5 ml-auto text-xs font-medium tracking-wide text-blue-500 bg-indigo-50 rounded-full">New</span>
                     }                      
                     </Link>

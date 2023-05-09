@@ -10,6 +10,7 @@ import AdminLogin2 from './pages/AdminPages/AdminLogin2';
 import UserBoard from './pages/UsersPage';
 import DashboardUser from './pages/UsersPage/Dashboard';
 import Board from './pages/UsersPage/Boards/Board';
+import CancelOrders from './pages/AdminPages/CancelOrders';
 
 import AdminPage from './pages/AdminPages';
 import Dashboard from './pages/AdminPages/Dashboard';
@@ -41,6 +42,8 @@ import FinishingOneDept from './pages/UsersPage/Report/FinishingOneDept';
 import FinishingTwoDept from './pages/UsersPage/Report/FinishingTwoDept';
 import QualityControlDept from './pages/UsersPage/Report/QualityControlDept';
 
+import Cancelled from './pages/UsersPage/Cancelled';
+
 function App() {
 
   return (
@@ -54,6 +57,7 @@ function App() {
           <Route path='/admin'  element={<AdminPage />}>
             <Route index element={<Dashboard />} />
             <Route path="users-page" element={<UsersPage />}></Route>
+            <Route path="cancelled-orders" element={<CancelOrders />}></Route>
             <Route path="product-orders" element={<OrdersPage />}></Route>
             <Route path="progress-tracker" element={<OverallBoard />}></Route>
             {/* //boards */}
@@ -65,6 +69,7 @@ function App() {
         <Route element={ <CheckSession /> }>
           <Route path='/dashboard'  element={<UserBoard />}>
             <Route index element={<DashboardUser />} />
+            <Route path="cancelled-orders" element={<Cancelled />}></Route>
             {/* Boards */}
             {/* --- Cutting --- */}
             <Route path="cutting" element={<Board />}></Route>
